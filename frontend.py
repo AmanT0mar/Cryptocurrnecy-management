@@ -1,5 +1,5 @@
 import tkinter as tk
-import backendfunction as bef
+import backend as bef
 import mysql.connector
 
 mydb = mysql.connector.connect(host = "localhost", user="Aman", database = "mydb")
