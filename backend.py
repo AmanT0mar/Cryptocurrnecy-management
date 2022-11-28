@@ -30,6 +30,27 @@ def logindatabase(username,passwd):
     for i in logindata:
         if passwd == i[3]:
             return True
-
-
+        
+def get_his(curname,interval):#interval = 1d,1week,1month,1year 
+    #if want more data points use start and end in .get()
+    if interval == '1d':
+        data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}'+"/history?interval=m1")
+        data = data.json()
+        for i in data['data']:
+            print(i['priceUsd'])
+    elif interval == '1w':
+        data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}'+"/history?interval=m15")
+        data = data.json()
+        for i in data['data']:
+            print(i['priceUsd'])
+    elif interval == '1m':
+        data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}'+"/history?interval=h1")
+        data = data.json()
+        for i in data['data']:
+            print(i['priceUsd'])
+    elif interval == '1y':
+        data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}'+"/history?interval=h12")
+        data = data.json()
+        for i in data['data']:
+            print(i['priceUsd'])
         
