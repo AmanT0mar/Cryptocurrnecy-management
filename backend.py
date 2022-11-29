@@ -62,3 +62,9 @@ def addtowatchlist(username,curname):
     sql = f"INSERT INTO WATCHLIST VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{Decimal(a['supply'])},{Decimal(a['marketCapUsd'])},{Decimal(a['volumeUsd24Hr'])})"
     mycursor.execute(sql)
     mydb.commit()
+#deleting from watchlist
+def delfromwatchlist(username,curname):
+    sql = "DELETE FROM WATCHLIST WHERE USERNAME = %s AND CURNAME = %s"
+    val = (username,curname)
+    mycursor.execute(sql, val)
+    mydb.commit()
