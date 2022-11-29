@@ -3,7 +3,7 @@ import mysql.connector
 mydb = mysql.connector.connect(host = "localhost", user="Aman", database = "mydb")
 mycursor = mydb.cursor()
 
-mycursor.execute("""CREATE TABLE SELL_OUT
+mycursor.execute("""CREATE TABLE IF NOT EXISTS SELL_OUT
                 (USERNAME VARCHAR(30),
                 SYMBOL VARCHAR(7),
                 CURNAME VARCHAR(15),
@@ -14,7 +14,7 @@ mycursor.execute("""CREATE TABLE SELL_OUT
                 CONSTRAINT PK_S PRIMARY KEY(USERNAME,CURNAME,QUANTITY,SELL_TIME),
                 CONSTRAINT FK_S FOREIGN KEY(USERNAME) REFERENCES USER_INFO(USERNAME) ON DELETE CASCADE)""")
 
-mycursor.execute("""CREATE TABLE BOUGHT
+mycursor.execute("""CREATE TABLE IF NOT EXISTS BOUGHT
                  (USERNAME VARCHAR(30),
                  SYMBOL VARCHAR(7),
                  CURNAME VARCHAR(15),
@@ -25,7 +25,7 @@ mycursor.execute("""CREATE TABLE BOUGHT
                  CONSTRAINT PK_B PRIMARY KEY(USERNAME,CURNAME,BUY_TIME),
                  CONSTRAINT FK_B FOREIGN KEY(USERNAME) REFERENCES USER_INFO (USERNAME) ON DELETE CASCADE)""")
 
-mycursor.execute("""CREATE TABLE WATCHLIST
+mycursor.execute("""CREATE TABLE IF NOT EXISTS WATCHLIST
                  (USERNAME VARCHAR(30),
                  SYMBOL VARCHAR(7),
                  CURNAME VARCHAR(15),
@@ -35,7 +35,7 @@ mycursor.execute("""CREATE TABLE WATCHLIST
                  VOLUME DECIMAL(35,16),
                  CONSTRAINT PK_B PRIMARY KEY(USERNAME,CURNAME),
                  CONSTRAINT FK_B FOREIGN KEY(USERNAME) REFERENCES USER_INFO (USERNAME) ON DELETE CASCADE)""")
-mycursor.execute(""" CREATE TABLE HOLDING
+mycursor.execute(""" CREATE TABLE IF NOT EXISTS HOLDING
                  (USERNAME VARCHAR(30),
                  SYMBOL VARCHAR(7),
                  CURNAME VARCHAR(15),
