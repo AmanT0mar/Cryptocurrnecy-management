@@ -54,3 +54,11 @@ def get_his(curname,interval):#interval = 1d,1week,1month,1year
         data = data.json()
         for i in data['data']:
             print(i['priceUsd'],i['time'])
+#adding cur to watchlist
+def addtowatchlist(username,curname):
+    data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}')
+    data = data.json()
+    a = data['data']
+    sql = f"INSERT INTO WATCHLIST VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{Decimal(a['supply'])},{Decimal(a['marketCapUsd'])},{Decimal(a['volumeUsd24Hr'])})"
+    mycursor.execute(sql)
+    mydb.commit()
