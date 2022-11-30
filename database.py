@@ -3,6 +3,13 @@ import mysql.connector
 mydb = mysql.connector.connect(host = "localhost", user="Aman", database = "mydb")
 mycursor = mydb.cursor()
 
+mycursor.execute("""CREATE TABLE IF NOT EXISTS USER_INFO
+                (FULLNAME VARCHAR(30),
+                USERNAME VARCHAR(30),
+                PHONENO BIGINT,
+                PASSWORD VARCHAR(15),
+                CONSTRAINT PK_U PRIMARY KEY(USERNAME)""")
+
 mycursor.execute("""CREATE TABLE IF NOT EXISTS SELL_OUT
                 (USERNAME VARCHAR(30),
                 SYMBOL VARCHAR(7),
@@ -42,6 +49,7 @@ mycursor.execute(""" CREATE TABLE IF NOT EXISTS HOLDING
                  CUR_PRICE DECIMAL(22,16),
                  QUANTITY DECIMAL(8,3),
                  INVESTED DECIMAL(30,16),
+                 PER_COIN DECIMAL(22,16),
                  RETURNS DECIMAL(30,16),
                  CONSTRAINT PK_H PRIMARY KEY(USERNAME,CURNAME,QUANTITY),
                  CONSTRAINT FK_H FOREIGN KEY(USERNAME) REFERENCES USER_INFO(USERNAME) ON DELETE CASCADE)""")
