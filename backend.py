@@ -99,3 +99,42 @@ def buying(username,curname,quantity):
         mycursor.execute(sql2)
     
     mydb.commit()
+#selling cur
+def selling(username,curname,quantity):
+    if quantity == 0:
+        print("invalid")
+    amt = Decimal(quantity)
+    data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}')
+    data = data.json()
+    a = data['data']
+    time = data['timestamp']//1000
+    time_cur = pd.to_datetime(time,unit='s')
+    
+    mycursor.execute(f"SELECT QUANTITY FROM HOLDING WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
+    d = mycursor.fetchall()
+    if d == []:
+        pass
+        #cur doesn't exist (*depends upon where we want to show sell button*!!!!!!!!!!)
+    else:
+        old_q = d[0][0]
+        if old_q < amt:
+            print("invalid")
+        else:
+            mycursor.execute(f"SELECT PER_COIN FROM HOLDING WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
+            pc = mycursor.fetchall()
+            pc_ = pc[0][0]
+            total_r = (pc_ - Decimal(a['priceUsd']))*amt
+            new_q = old_q - amt
+            if new_q == 0:
+                sql1 = f"DELETE FROM HOLDING WHERE USERNAME = '{username}' AND CURNAME = '{curname}'"
+                sql2 = f"INSERT INTO SELL_OUT VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{total_r},'{time_cur}')"
+                mycursor.execute(sql1)
+                mycursor.execute(sql2)
+
+            else:
+                inv = pc_ * new_q
+                sql1 = f"UPDATE HOLDING SET QUANTITY = {new_q}, INVESTED = {inv}"
+                sql2 = f"INSERT INTO SELL_OUT VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{total_r},'{time_cur}')"
+                mycursor.execute(sql1)
+                mycursor.execute(sql2)
+    mydb.commit()
