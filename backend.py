@@ -68,3 +68,34 @@ def delfromwatchlist(username,curname):
     val = (username,curname)
     mycursor.execute(sql, val)
     mydb.commit()
+
+ #buying curr
+def buying(username,curname,quantity):
+    amt = Decimal(quantity)
+    data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}')
+    data = data.json()
+    a = data['data']
+    tp = Decimal(a['priceUsd'])*amt
+    time = data['timestamp']//1000
+    time_cur = pd.to_datetime(time,unit='s')
+    
+    
+    mycursor.execute(f"SELECT PER_COIN FROM HOLDING WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
+    d = mycursor.fetchall()
+    if d == []:
+        sql1 = f"INSERT INTO BOUGHT VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{tp},'{time_cur}')"
+        sql2 = f"INSERT INTO HOLDING VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{tp},NULL,{Decimal(a['priceUsd'])})"
+        mycursor.execute(sql1)
+        mycursor.execute(sql2)
+    else:
+        mycursor.execute(f"SELECT QUANTITY FROM HOLDING WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
+        q = mycursor.fetchall()
+        old_q = q[0][0]
+        old_pc = d[0][0]
+        new_pc = ((old_pc*old_q)+(tp))/(old_q+amt)
+        sql1 = f"INSERT INTO BOUGHT VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{tp},'{time_cur}')"
+        sql2 = f"UPDATE HOLDING SET QUANTITY = {old_q+amt} ,INVESTED = {tp+(old_pc*old_q)} ,PER_COIN = {new_pc} WHERE CURNAME = '{curname}'"
+        mycursor.execute(sql1)
+        mycursor.execute(sql2)
+    
+    mydb.commit()
