@@ -10,7 +10,7 @@ from datetime import datetime
 
 import mysql.connector
 
-mydb = mysql.connector.connect(host = "localhost", user="Aman", database = "mydb")
+mydb = mysql.connector.connect(host = "localhost", user="Aman", database = "myproj")
 mycursor = mydb.cursor()
 
 def up_wl(username):
