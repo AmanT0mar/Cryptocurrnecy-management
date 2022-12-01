@@ -8,7 +8,7 @@ mycursor.execute("""CREATE TABLE IF NOT EXISTS USER_INFO
                 USERNAME VARCHAR(30) NOT NULL,
                 PHONENO BIGINT(10) NOT NULL,
                 PASSWORD VARCHAR(256) NOT NULL,
-                CONSTRAINT PK_U PRIMARY KEY(USERNAME)""")
+                CONSTRAINT PK_U PRIMARY KEY(USERNAME))""")
 
 mycursor.execute("""CREATE TABLE IF NOT EXISTS SELL_OUT
                 (USERNAME VARCHAR(30) NOT NULL,
