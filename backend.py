@@ -5,7 +5,7 @@ import pandas as pd
 import threading
 import time
 
-mydb = mysql.connector.connect(host = "localhost", user="Aman", database = "mydb")
+mydb = mysql.connector.connect(host = "localhost", user="Aman", database = "myproj")
 mycursor = mydb.cursor()
 
 #FOR SIGNUP
@@ -18,7 +18,7 @@ def selectfromusers(username):
         return i
 #FOR SIGNUP    
 def insertintousers(fullname,username,phno,passwd):
-    sql = "INSERT INTO USER_INFO VALUES(%s,%s,%s,%s)"
+    sql = "INSERT INTO USER_INFO VALUES(%s,%s,%s,SHA2(%s,256))"
     val = (fullname,username,phno,passwd,)
     mycursor.execute(sql,val)
     mydb.commit()
@@ -29,7 +29,7 @@ def logindatabase(username,passwd):
     mycursor.execute(sql,val)
     logindata = mycursor.fetchall()
     for i in logindata:
-        if passwd == i[3]:
+        if hashlib.sha256(passwd.encode()).hexdigest() == i[3]:
             return True
 #FOR HISTORICAL DATA    
 def get_his(curname,interval):#interval = 1d,1week,1month,1year 
@@ -84,7 +84,7 @@ def buying(username,curname,quantity):
     d = mycursor.fetchall()
     if d == []:
         sql1 = f"INSERT INTO BOUGHT VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{tp},'{time_cur}')"
-        sql2 = f"INSERT INTO HOLDING VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{tp},NULL,{Decimal(a['priceUsd'])})"
+        sql2 = f"INSERT INTO HOLDING VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{tp},{Decimal(a['priceUsd'])},NULL)"
         mycursor.execute(sql1)
         mycursor.execute(sql2)
     else:
@@ -103,6 +103,7 @@ def buying(username,curname,quantity):
 def selling(username,curname,quantity):
     if quantity == 0:
         print("invalid")
+        return
     amt = Decimal(quantity)
     data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}')
     data = data.json()
