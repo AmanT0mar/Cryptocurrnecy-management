@@ -21,7 +21,7 @@ def up_wl(username):
         data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname.lower()}')
         data = data.json()
         a = data['data']
-        mycursor.execute(f"UPDATE WATCHLIST SET PRICE = {Decimal(a['priceUsd'])}, SUPPLY = {Decimal(a['supply'])}, MARKETCAP = {Decimal(a['marketCapUsd'])}, VOLUME = {Decimal(a['volumeUsd24Hr'])} WHERE CURNAME = '{curname}' ")
+        mycursor.execute(f"UPDATE WATCHLIST SET PRICE = {Decimal(a['priceUsd'])}, SUPPLY = {Decimal(a['supply'])}, MARKETCAP = {Decimal(a['marketCapUsd'])}, VOLUME = {Decimal(a['volumeUsd24Hr'])} WHERE CURNAME = '{curname}' AND USERNAME = {username}")
         mydb.commit() 
 def up_hd(username):        
     mycursor.execute("SELECT * FROM HOLDING")
@@ -34,7 +34,7 @@ def up_hd(username):
         data = data.json()
         a = data['data']
         returns = inv - Decimal(a['priceUsd'])*q
-        mycursor.execute(f"UPDATE HOLDING SET CUR_PRICE = {Decimal(a['priceUsd'])}, RETURNS ={returns} WHERE CURNAME = '{curname}' ")
+        mycursor.execute(f"UPDATE HOLDING SET CUR_PRICE = {Decimal(a['priceUsd'])}, RETURNS ={returns} WHERE CURNAME = '{curname}' AND USERNAME = {username}")
         mydb.commit() 
 def thr():
     t1 = threading.Thread(target=up_wl('superman'))
@@ -44,6 +44,7 @@ def thr():
     t1.join()
     t2.join()
 
+    
 while True:
     thr()
     time.sleep(30)
