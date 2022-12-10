@@ -70,7 +70,7 @@ class MainWin:
         if self.passwd != self.passwd2:
             self.wp = tk.Label(self.signup_win,text="*PASSWORD DOESN'T MATCH*",fg='#f00',font=('Times 10')).place(x=360,y=250)
         
-        elif self.fullname!=None or self.username!=None or self.phno!=None or self.passwd!=None:
+        elif self.fullname==None or self.username==None or self.phno==None or self.passwd==None:
             self.non = tk.Label(self.signup_win,text="*FIELD IS EMPTY*",fg='#f00',font=('Times 10')).place(x=150,y=300)
         
         else:
