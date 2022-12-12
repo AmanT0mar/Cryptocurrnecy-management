@@ -34,26 +34,42 @@ def logindatabase(username,passwd):
 #FOR HISTORICAL DATA    
 def get_his(curname,interval):#interval = 1d,1week,1month,1year 
     #if want more data points use start and end in .get()
+    price = []
+    time = []
     if interval == '1d':
         data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}'+"/history?interval=m1")
         data = data.json()
         for i in data['data']:
-            print(i['priceUsd'],i['time'])
+            price = price + [Decimal(i['priceUsd'])]
+            time_ = (i['time']//1000)
+            time__ = pd.to_datetime(time_,unit='s')
+            time = time + [time__]
     elif interval == '1w':
         data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}'+"/history?interval=m15")
         data = data.json()
         for i in data['data']:
-            print(i['priceUsd'],i['time'])
+            price = price + [Decimal(i['priceUsd'])]
+            time_ = (i['time']//1000)
+            time__ = pd.to_datetime(time_,unit='s')
+            time = time + [time__]
     elif interval == '1m':
         data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}'+"/history?interval=h1")
         data = data.json()
         for i in data['data']:
-            print(i['priceUsd'],i['time'])
+            price = price + [Decimal(i['priceUsd'])]
+            time_ = (i['time']//1000)
+            time__ = pd.to_datetime(time_,unit='s')
+            time = time + [time__]
     elif interval == '1y':
         data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}'+"/history?interval=h12")
         data = data.json()
         for i in data['data']:
-            print(i['priceUsd'],i['time'])
+            price = price + [Decimal(i['priceUsd'])]
+            time_ = (i['time']//1000)
+            time__ = pd.to_datetime(time_,unit='s')
+            time = time + [time__]
+    df = pd.DataFrame(list(zip(price,time)),columns = ['price','time'])
+    return df
 #adding cur to watchlist
 def addtowatchlist(username,curname):
     data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}')
