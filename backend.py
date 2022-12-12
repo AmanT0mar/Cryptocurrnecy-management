@@ -39,31 +39,19 @@ def get_his(curname,interval):#interval = 1d,1week,1month,1year
     if interval == '1d':
         data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}'+"/history?interval=m1")
         data = data.json()
-        for i in data['data']:
-            price = price + [Decimal(i['priceUsd'])]
-            time_ = (i['time']//1000)
-            time__ = pd.to_datetime(time_,unit='s')
-            time = time + [time__]
+        
     elif interval == '1w':
         data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}'+"/history?interval=m15")
         data = data.json()
-        for i in data['data']:
-            price = price + [Decimal(i['priceUsd'])]
-            time_ = (i['time']//1000)
-            time__ = pd.to_datetime(time_,unit='s')
-            time = time + [time__]
+        
     elif interval == '1m':
         data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}'+"/history?interval=h1")
         data = data.json()
-        for i in data['data']:
-            price = price + [Decimal(i['priceUsd'])]
-            time_ = (i['time']//1000)
-            time__ = pd.to_datetime(time_,unit='s')
-            time = time + [time__]
+        
     elif interval == '1y':
         data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}'+"/history?interval=h12")
         data = data.json()
-        for i in data['data']:
+    for i in data['data']:
             price = price + [Decimal(i['priceUsd'])]
             time_ = (i['time']//1000)
             time__ = pd.to_datetime(time_,unit='s')
