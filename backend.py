@@ -82,8 +82,9 @@ def buying(username,curname,quantity):
     tp = Decimal(a['priceUsd'])*amt
     time = data['timestamp']//1000
     time_cur = pd.to_datetime(time,unit='s')
-    
-    
+    #updating user_info
+    mycursor.execute(f"UPDATE USER_INFO SET BALANCE = BALANCE - {tp} WHERE USERNAME = '{username}'")
+    #updating holding
     mycursor.execute(f"SELECT PER_COIN FROM HOLDING WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
     d = mycursor.fetchall()
     if d == []:
@@ -105,41 +106,81 @@ def buying(username,curname,quantity):
     mydb.commit()
 #selling cur
 def selling(username,curname,quantity):
-    if quantity == 0:
-        print("invalid")
-        return
     amt = Decimal(quantity)
     data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}')
     data = data.json()
     a = data['data']
     time = data['timestamp']//1000
     time_cur = pd.to_datetime(time,unit='s')
-    
     mycursor.execute(f"SELECT QUANTITY FROM HOLDING WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
     d = mycursor.fetchall()
-    if d == []:
-        pass
-        #cur doesn't exist (*depends upon where we want to show sell button*!!!!!!!!!!)
-    else:
-        old_q = d[0][0]
-        if old_q < amt:
-            print("invalid")
-        else:
-            mycursor.execute(f"SELECT PER_COIN FROM HOLDING WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
-            pc = mycursor.fetchall()
-            pc_ = pc[0][0]
-            total_r = (pc_ - Decimal(a['priceUsd']))*amt
-            new_q = old_q - amt
-            if new_q == 0:
-                sql1 = f"DELETE FROM HOLDING WHERE USERNAME = '{username}' AND CURNAME = '{curname}'"
-                sql2 = f"INSERT INTO SELL_OUT VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{total_r},'{time_cur}')"
-                mycursor.execute(sql1)
-                mycursor.execute(sql2)
+    old_q = d[0][0]
+    mycursor.execute(f"SELECT PER_COIN FROM HOLDING WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
+    pc = mycursor.fetchall()
+    pc_ = pc[0][0]
+    total_r = (pc_ - Decimal(a['priceUsd']))*amt
+    new_q = old_q - amt
+    curtprice = Decimal(a['priceUsd'])*amt
+    #updating user_info
+    mycursor.execute(f"UPDATE USER_INFO SET BALANCE = BALANCE + {curtprice} WHERE USERNAME = '{username}'")
 
-            else:
-                inv = pc_ * new_q
-                sql1 = f"UPDATE HOLDING SET QUANTITY = {new_q}, INVESTED = {inv}"
-                sql2 = f"INSERT INTO SELL_OUT VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{total_r},'{time_cur}')"
-                mycursor.execute(sql1)
-                mycursor.execute(sql2)
+    #updating sell_out and holding
+    if new_q == 0:
+        sql1 = f"DELETE FROM HOLDING WHERE USERNAME = '{username}' AND CURNAME = '{curname}'"
+        sql2 = f"INSERT INTO SELL_OUT VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{total_r},'{time_cur}')"
+        mycursor.execute(sql1)
+        mycursor.execute(sql2)
+
+    else:
+        inv = pc_ * new_q
+        sql1 = f"UPDATE HOLDING SET QUANTITY = {new_q}, INVESTED = {inv}"
+        sql2 = f"INSERT INTO SELL_OUT VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{total_r},'{time_cur}')"
+        mycursor.execute(sql1)
+        mycursor.execute(sql2)
+
     mydb.commit()
+    
+#GETTING CURRENT BALANCE 
+def getbalance(username):
+    sql = "SELECT BALANCE FROM USER_INFO WHERE USERNAME = %s "
+    val = (username,)
+    mycursor.execute(sql,val)
+    userdata = mycursor.fetchall()
+    for i in userdata:
+        return i[0]
+
+    mydb.commit()
+
+#GETTING CURRENT COIN DETAILS
+def current_data(curname):
+    data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}')
+    data = data.json()
+    new_data = data['data']
+    price = Decimal(new_data['priceUsd'])
+    time_ = data['timestamp']//1000
+    time__ = pd.to_datetime(time_,unit='s')
+    #cur_data = pd.DataFrame(list(zip(list(price),list(time__)),column=['price','time']))
+    return pd.DataFrame([{'price':price,'time':time__}])
+
+#GETTING CURRENT NO OF COINS
+def coinquant(username,curname):
+    mycursor.execute(f"SELECT QUANTITY FROM HOLDING WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
+    data = mycursor.fetchall()
+    if data == []:
+        return 0
+    else:
+        for i in data:
+            return i[0]
+
+#ADDING TO BALANCE
+def addbalance(username,amount):
+    mycursor.execute(f"UPDATE USER_INFO SET BALANCE = BALANCE + {amount} WHERE USERNAME = '{username}'")
+    mydb.commit()
+
+#WITHDRAW FROM WALLET
+def withdrawwallet(username,amount):
+    mycursor.execute(f"UPDATE USER_INFO SET BALANCE = BALANCE - {amount} WHERE USERNAME = '{username}'")
+    mydb.commit()
+
+    
+    
