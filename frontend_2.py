@@ -187,24 +187,9 @@ class MainWin:
         else:
             self.ue2 = CTk.CTkLabel(self.login_frame,text="USERNAME AND PASSWORD DOESN'T MATCH",text_color='#f00',font=small_font)
             self.ue2.place(x=40,y=200)
-        
-        # if bef.logindatabase(self.name,self.passwd) != True:
-        #     self.ue2 = CTk.CTkLabel(self.login_frame,
-        #                             text="USERNAME AND PASSWORD DOESN'T MATCH",
-        #                             text_color=('red','red'),
-        #                             font=small_font)
-        #     self.ue2.place(x=30,y=60)
-        #     # self.login_win.destroy()
-        #     # self.win.destroy()
-        #     #MainFrame(self.name)
-        # else:
-        #     self.ue2 = CTk.CTkLabel(self.login_frame,
-        #                             text="USERNAME AND PASSWORD DOESN'T MATCH",
-        #                             fg='#f00',font=small_font)
-        #     self.ue2.place(x=30,y=50)
-        
-        # self.passwd_var.set("")
-
+            self.name_varl.set("")
+            self.passwd_varl.set("")
+            
 if __name__=='__main__':
     app=MainWin()
     app.login()
