@@ -1,21 +1,24 @@
+from decimal import Decimal
+import requests
+import json
+import pandas as pd
 import tkinter as tk
-import backend_2 as bef
+import backend as bef
 import mysql.connector
 import customtkinter as CTk
 
-mydb = mysql.connector.connect(host = "localhost", user="root", database = "mydb",password='mysql')
+mydb = mysql.connector.connect(host = "localhost", user="Aman", database = "myproj")
 mycursor = mydb.cursor()
 
-general_font=('Times 18')
-small_font=('Times 13')
-large_font = ('Times 30')
+general_font=('Times New Roman', 18)
+small_font=('Times New Roman', 13)
+large_font = ('Times New Roman', 30)
 current_theme='dark'
 class MainWin:
     def __init__(self):
         self.win = CTk.CTk()
         self.win.state("zoomed")
         self.win.title("CRYPTOCURRENCY PORTFOLIO MANAGEMENT")
-        self.frame1= CTk.CTkFrame()
         self.frame = CTk.CTkFrame(self.win,
                                   width=1100,height=850)
         self.frame.place(x=370,y=0)
@@ -23,7 +26,7 @@ class MainWin:
                                   text="CRYPTOCURRENCY PORTFOLIO MANAGEMENT",
                                   justify='center',
                                   text_color='#308849',
-                                  text_font=large_font)
+                                  font=large_font)
         self.user_.place(x=120,y=150)
         
     def login(self):
@@ -32,24 +35,25 @@ class MainWin:
         self.login_frame.place(x=20,y=70)
         self.title = CTk.CTkLabel(self.login_frame,
                                   text="LOGIN",
-                                  text_font=general_font)
+                                  font=general_font)
         self.title.place(x=100,y=20)
-        self.name_var = tk.StringVar()
-        self.passwd_var = tk.StringVar()
+        
+        self.name_varl = tk.StringVar()
+        self.passwd_varl = tk.StringVar()
     
         self.login_label1 = CTk.CTkLabel(self.login_frame,
                                         text="USERNAME",
-                                        text_font=small_font).place(x=0,y=100)
+                                        font=small_font).place(x=0,y=100)
         self.login_entry1 = CTk.CTkEntry(self.login_frame,
-                                        textvariable=self.name_var,
+                                        textvariable=self.name_varl,
                                         width=200,
                                         height=30).place(x=130,y=100)
         
         self.login_label2 = CTk.CTkLabel(self.login_frame,  
                                         text="PASSWORD",
-                                        text_font=small_font).place(x=0,y=150)
+                                        font=small_font).place(x=0,y=150)
         self.login_entry2 = CTk.CTkEntry(self.login_frame,
-                                        textvariable=self.passwd_var,
+                                        textvariable=self.passwd_varl,
                                         show="*",
                                         width=200,
                                         height=30).place(x=130,y=150)
@@ -67,123 +71,128 @@ class MainWin:
                                        width=150).place(x=100,y=300)
     def signup(self):
         
-        self.signup_win = CTk.CTkToplevel()
+        self.signup_win = CTk.CTkToplevel(self.win)
         self.signup_win.geometry("600x500")
         
-        self.fullname_var =tk.StringVar()
-        self.name_var =tk.StringVar()
-        self.phno_var =tk.StringVar()
-        self.passwd_var =tk.StringVar()
-        self.passwd2_var =tk.StringVar()
+        self.fullname_var = tk.StringVar()
+        self.name_var = tk.StringVar()
+        self.phno_var = tk.StringVar()
+        self.passwd_var = tk.StringVar()
+        self.passwd2_var = tk.StringVar()
     
         self.signup_win.title("CRYPTOCURRENCY PORTFOLIO MANAGEMENT")
+
         self.signup_win_label1 = CTk.CTkLabel(self.signup_win,
                                               text="SIGN UP",
                                               justify='center',
-                                              text_font=general_font).place(x=200,y=70)
+                                              font=general_font).place(x=200,y=70)
     
         self.signup_win_label2 = CTk.CTkLabel(self.signup_win,
                                               text="FULLNAME",
-                                              text_font=small_font).place(x=10,y=130)
+                                              font=small_font).place(x=80,y=130)
         self.signup_win_entry2 = CTk.CTkEntry(self.signup_win,
                                               textvariable=self.fullname_var,
-                                              width=200).place(x=150,y=130)
+                                              width=200).place(x=220,y=130)
         
         self.signup_win_label3 = CTk.CTkLabel(self.signup_win,
                                               text="USERNAME",
-                                              text_font=small_font).place(x=10,y=160)
+                                              font=small_font).place(x=80,y=160)
+
         self.signup_win_entry3 = CTk.CTkEntry(self.signup_win,
                                               textvariable=self.name_var,
-                                              width=200).place(x=150,y=160)
+                                              width=200).place(x=220,y=160)
         
         self.signup_win_label4 = CTk.CTkLabel(self.signup_win,
                                               text="PHONE NO.",
-                                              text_font=small_font).place(x=10,y=190)
+                                              font=small_font).place(x=80,y=190)
         self.signup_win_entry4 = CTk.CTkEntry(self.signup_win,
                                               textvariable=self.phno_var,
-                                              width=200).place(x=150,y=190)
+                                              width=200).place(x=220,y=190)
         
         self.signup_win_label5 = CTk.CTkLabel(self.signup_win,
                                               text="PASSWORD",
-                                              text_font=small_font).place(x=10,y=220)
+                                              font=small_font).place(x=80,y=220)
         self.signup_win_entry5 = CTk.CTkEntry(self.signup_win, 
                                               textvariable=self.passwd_var,
                                               show="*",
-                                              width=200).place(x=150,y=220)
+                                              width=200).place(x=220,y=220)
         
         self.signup_win_label6 = CTk.CTkLabel(self.signup_win,
                                               text="RE-ENTER\nPASSWORD",
-                                              text_font=small_font).place(x=10,y=250)
+                                              font=small_font).place(x=80,y=250)
         self.signup_win_entry6 = CTk.CTkEntry(self.signup_win,  
                                               textvariable=self.passwd2_var,
                                               show="*",
-                                              width=200).place(x=150,y=250)
+                                              width=200).place(x=220,y=250)
 
     
         self.signup_win_button1 = CTk.CTkButton(self.signup_win,text="SIGN UP",
                                                 height=50,width=150,
-                                                text_font=small_font,
+                                                font=small_font,
                                                 command=self.signing).place(x=200,y=350)
                             
     def signing(self):
+
         self.fullname = self.fullname_var.get()
-        print(type(self.fullname))
         self.username = self.name_var.get()
         self.phno = self.phno_var.get()
         self.passwd = self.passwd_var.get()
         self.passwd2 = self.passwd2_var.get()
-        
-        if self.fullname=='' or self.username=='' or self.phno=='' or self.passwd=='':
+
+        if self.fullname == "" or self.username == "" or self.phno == "" or self.passwd == "" :
             self.non = CTk.CTkLabel(self.signup_win,
                                     text="*FIELD IS EMPTY*",
                                     text_color='#f00',
-                                    text_font=('Times 10')).place(x=150,y=300)
+                                    font=small_font).place(x=190,y=300)
         else:
-            if bef.selectfromusers(self.username) != '':
+            if bef.selectfromusers(self.username) != None:
                 self.ue = CTk.CTkLabel(self.signup_win,
                                     text="*USERNAME ALREADY EXIST*",
                                     text_color='#f00',
-                                    text_font=('Times 10')).place(x=360,y=160)
+                                    font=small_font).place(x=430,y=160)
+                self.name_var.set("")
         
-            if len(self.phno)!=10:
+            elif len(self.phno) != 10:
                 self.wpn = CTk.CTkLabel(self.signup_win,
                                         text="*INVALID PHONE NUMBER*",
                                         text_color='#f00',
-                                        text_font=('Times 10')).place(x=360,y=190)
+                                        font=small_font).place(x=430,y=190)
                 
-            if (self.passwd != self.passwd2) and self.passwd!='':
+            elif self.passwd != self.passwd2 :
                 self.wp = CTk.CTkLabel(self.signup_win,
                                     text="*PASSWORD DOESN'T MATCH*",
                                     text_color='#f00',
-                                    text_font=('Times 10')).place(x=360,y=250)
-            
+                                    font=small_font).place(x=430,y=250)
+                self.passwd_var.set("")
+                self.passwd2_var.set("")
+                
             else:
                 bef.insertintousers(self.fullname,self.username,self.phno,self.passwd)
-            
-        self.fullname_var.set("")
-        self.name_var.set("")
-        self.phno_var.set("")
-        self.passwd_var.set("")
-        self.passwd2_var.set("")
+
+                self.fullname_var.set("")
+                self.name_var.set("")
+                self.phno_var.set("")
+                self.passwd_var.set("")
+                self.passwd2_var.set("")
         
     def check_login(self):
-        self.name = self.name_var.get()
-        self.passwd = self.passwd_var.get()
+        self.name = self.name_varl.get()
+        self.passwdl = self.passwd_varl.get()
         
-        if bef.logindatabase(self.name,self.passwd) == True:
+        if bef.logindatabase(self.name,self.passwdl) == True:
             print("successfully logged in")
             # self.login_frame.destroy()
             # self.win.destroy()
             #MainFrame(self.name)
         else:
-            self.ue2 = CTk.CTkLabel(self.login_frame,text="USERNAME AND PASSWORD DOESN'T MATCH",text_color='#f00',text_font=('Times 10'))
-            self.ue2.place(x=360,y=150)
+            self.ue2 = CTk.CTkLabel(self.login_frame,text="USERNAME AND PASSWORD DOESN'T MATCH",text_color='#f00',font=small_font)
+            self.ue2.place(x=40,y=200)
         
         # if bef.logindatabase(self.name,self.passwd) != True:
         #     self.ue2 = CTk.CTkLabel(self.login_frame,
         #                             text="USERNAME AND PASSWORD DOESN'T MATCH",
         #                             text_color=('red','red'),
-        #                             font=('Times 10'))
+        #                             font=small_font)
         #     self.ue2.place(x=30,y=60)
         #     # self.login_win.destroy()
         #     # self.win.destroy()
@@ -191,7 +200,7 @@ class MainWin:
         # else:
         #     self.ue2 = CTk.CTkLabel(self.login_frame,
         #                             text="USERNAME AND PASSWORD DOESN'T MATCH",
-        #                             fg='#f00',font=('Times 10'))
+        #                             fg='#f00',font=small_font)
         #     self.ue2.place(x=30,y=50)
         
         # self.passwd_var.set("")
@@ -200,4 +209,3 @@ if __name__=='__main__':
     app=MainWin()
     app.login()
     app.win.mainloop()
-    
