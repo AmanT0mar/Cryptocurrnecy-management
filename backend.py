@@ -18,7 +18,7 @@ def selectfromusers(username):
         return i
 #FOR SIGNUP    
 def insertintousers(fullname,username,phno,passwd):
-    sql = "INSERT INTO USER_INFO VALUES(%s,%s,%s,SHA2(%s,256))"
+    sql = "INSERT INTO USER_INFO VALUES(%s,%s,%s,SHA2(%s,256),0)"
     val = (fullname,username,phno,passwd,)
     mycursor.execute(sql,val)
     mydb.commit()
