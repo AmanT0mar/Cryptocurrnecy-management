@@ -181,6 +181,12 @@ def addbalance(username,amount):
 def withdrawwallet(username,amount):
     mycursor.execute(f"UPDATE USER_INFO SET BALANCE = BALANCE - {amount} WHERE USERNAME = '{username}'")
     mydb.commit()
+    
+#CHANGING PASSWORD
+def chgpassword(username,passwd):
+    newpwd = hashlib.sha256(passwd.encode()).hexdigest()
+    mycursor.execute(f"UPDATE USER_INFO SET PASSWORD = '{newpwd}' WHERE USERNAME = '{username}'")
+    mydb.commit()
 
     
     
