@@ -463,7 +463,7 @@ class holdlist_frame:
 #     def pro(self):
 #         pass
 
-class Profile:
+#class Profile:
 #     def __init__(self,username):
 #         self.username = username
 
