@@ -188,5 +188,8 @@ def chgpassword(username,passwd):
     mycursor.execute(f"UPDATE USER_INFO SET PASSWORD = '{newpwd}' WHERE USERNAME = '{username}'")
     mydb.commit()
 
-    
+#Getting currecy of the user from specified table
+def get_curs(username,table_name):
+    mycursor.execute(f"SELECT * FROM {table_name} WHERE USERNAME='{username}'")
+    return mycursor.fetchall()
     
