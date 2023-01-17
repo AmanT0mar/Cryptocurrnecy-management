@@ -339,7 +339,8 @@ class wishlist_frame:
         sel_item = self.table.identify('item',event.x,event.y)
         curname = self.table.item(sel_item)['values'][1]
         self.main.withdraw()
-        self.win = CurrencyDetails(self.main,self.username,curname)
+        cur_id = bef.get_cur_id(curname)
+        self.win = CurrencyDetails(self.main,self.username,cur_id)
 
 
 class boughtlist_frame:
@@ -498,7 +499,9 @@ class holdlist_frame:
     def OnDoubleClick(self,event):
         sel_item = self.table.identify('item',event.x,event.y)
         curname = self.table.item(sel_item)['values'][1]
-        self.win = CurrencyDetails(self.main,self.username,curname)
+        self.main.withdraw()
+        cur_id = bef.get_cur_id(curname)
+        self.win = CurrencyDetails(self.main,self.username,cur_id)
 
 class CurrencyDetails:
     def __init__(self,main_win,username,curname):
