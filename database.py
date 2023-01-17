@@ -58,6 +58,12 @@ mycursor.execute("""CREATE TABLE IF NOT EXISTS COINS
                 (CNAME VARCHAR(25) NOT NULL,
                 CID VARCHAR(25) NOT NULL,
                 CSYMBOL VARCHAR(25) NOT NULL,
-                CONSTRAINT PK_I PRIMARY KEY(CID)""")
-
+                CONSTRAINT PK_I PRIMARY KEY(CID))""")
+mycursor.execute("""CREATE TABLE IF NOT EXISTS BALANCE
+                 (USERNAME VARCHAR(30) NOT NULL,
+                  ACTION VARCHAR(30) NOT NULL,
+                  AMOUNT DECIMAL(45,16) NOT NULL,
+                  TIME TIMESTAMP NOT NULL,
+                  CONSTRAINT PK_B PRIMARY KEY(USERNAME,TIME),
+                  CONSTRAINT FK_B FOREIGN KEY(USERNAME) REFERENCES USER_INFO(USERNAME) ON DELETE CASCADE)""")
 mydb.commit()  
