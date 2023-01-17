@@ -193,3 +193,19 @@ def get_curs(username,table_name):
     mycursor.execute(f"SELECT * FROM {table_name} WHERE USERNAME='{username}'")
     return mycursor.fetchall()
     
+#USER DETAILS 
+def userd(username):
+    mycursor.execute(f"SELECT * FROM USER_INFO WHERE USERNAME = '{username}'")
+    ud0 = mycursor.fetchall()
+    mycursor.execute(f"SELECT * FROM HOLDING WHERE USERNAME = '{username}'")
+    ud1 = mycursor.fetchall()
+    for i in ud1:
+        tot_inv = i[5]
+    return ud0 , tot_inv
+
+#BALANCE INFO
+def balinfo(username):
+    mycursor.execute(f"SELECT * FROM BALANCE WHERE USERNAME = '{username}' ORDER BY TIME DESC")
+    data = mycursor.fetchall()
+    return data
+
