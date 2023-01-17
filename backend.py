@@ -219,3 +219,12 @@ def get_coin_list(a=None):
 def get_cur_id(curname):
     mycursor.execute(f"SELECT CID FROM COINS WHERE CNAME='{curname}'")
     return mycursor.fetchall()[0][0]
+
+#profit/loss
+def porl(username):
+    mycursor.execute(f"SELECT TOTAL_RETURNS FROM SELL_OUT WHERE USERNAME = '{username}'")
+    tot_re = 0
+    d = mycursor.fetchall()
+    for i in d:
+        tot_re = tot_re + i[0]
+    return tot_re
