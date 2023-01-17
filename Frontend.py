@@ -716,15 +716,25 @@ class Profile:
 
         #user info
         self.ud,self.tinv = bef.userd(self.username)
-        self.tinv = (self.tinv*10000)//1
+        self.tinv = (self.tinv*10000000)//1
+        self.tot_r = bef.porl(self.username)
+        self.tot_r = (self.tot_r*10000000)//1
         self.wlabel0 = CTk.CTkLabel(self.wallet,text=f'HELLO, {self.ud[0][0]}',font=('Courier',30))
         self.wlabel0.place(x=100,y=60)
         self.userd0 = CTk.CTkLabel(self.wallet,text=f"UserID: {self.ud[0][1]}",font=('Courier',20))
         self.userd0.place(x=140,y=140)
         self.userd1 = CTk.CTkLabel(self.wallet,text=f"Phone No: {self.ud[0][2]}",font=('Courier',20))
         self.userd1.place(x=140,y=180)
-        self.userd2 = CTk.CTkLabel(self.wallet,text=f"Investment: {self.tinv/10000}  USD",font=('Courier',20))
+        self.userd2 = CTk.CTkLabel(self.wallet,text=f"Investment: {self.tinv/10000000}  USD",font=('Courier',20))
         self.userd2.place(x=140,y=220)
+        self.userd4 = CTk.CTkLabel(self.wallet,text="Total Returns:",font=('Courier',20))
+        self.userd4.place(x=140,y=260)
+        if self.tot_r >= 0:
+            self.userd3 = CTk.CTkLabel(self.wallet,text=f"{self.tot_r/10000000} USD",font=('Courier',20),text_color="green")
+            self.userd3.place(x=320,y=260)
+        else:
+            self.userd3 = CTk.CTkLabel(self.wallet,text=f"{self.tot_r/10000000} USD",font=('Courier',20),text_color="red")
+            self.userd3.place(x=320 ,y=260)
         # self.userpic = ImageTk.PhotoImage(Image.open("profilepic1.png"))
         # self.userlabel = tk.Label(self.wallet,image=self.userpic)
         # self.userlabel.place(x=0,y=0)
