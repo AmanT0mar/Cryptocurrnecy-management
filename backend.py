@@ -209,3 +209,13 @@ def balinfo(username):
     data = mycursor.fetchall()
     return data
 
+
+#get coins list (currency names)
+def get_coin_list(a=None):
+    mycursor.execute(f"SELECT CNAME FROM COINS")
+    data= mycursor.fetchall() 
+    return data
+#get currency id using currency name
+def get_cur_id(curname):
+    mycursor.execute(f"SELECT CID FROM COINS WHERE CNAME='{curname}'")
+    return mycursor.fetchall()[0][0]
