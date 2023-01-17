@@ -463,119 +463,156 @@ class holdlist_frame:
 #     def pro(self):
 #         pass
 
-#class Profile:
-#     def __init__(self,username):
-#         self.username = username
+class Profile:
+    def __init__(self,username):
+        self.username = username
 
 
-#         self.wallet = CTk.CTk()
-#         self.wallet.state("zoomed")
+        self.wallet = CTk.CTk()
+        self.wallet.state("zoomed")
 
-#         self.wlabel0 = CTk.CTkLabel(self.wallet,text=f'{self.username}',font=('Courier',30))
-#         self.wlabel0.place(x=140,y=40)
-#         self.userd0 = CTk.CTkLabel(self.wallet,text="SOME DETAILS",font=('Courier',20))
-#         self.userd0.place(x=180,y=120)
-
-#         #balance
-#         self.Pframe0 = CTk.CTkFrame(self.wallet,width=550,height=380)
-#         self.Pframe0.place(x=850,y=420)
-#         self.wlabel3 = CTk.CTkLabel(self.Pframe0,text="FUND YOUR WALLET ",font=('Courier',30))
-#         self.wlabel3.place(x=20,y=30)
-#         self.balance = bef.getbalance(f'{self.username}')
-#         self.wlabel1 = CTk.CTkLabel(self.Pframe0,text="BALANCE AVAILABLE",font=('Courier',27))
-#         self.wlabel1.place(x=40,y=100)
-#         self.wlabel2 = CTk.CTkLabel(self.Pframe0,text=f'{self.balance} USD',font=('Courier',20))
-#         self.wlabel2.place(x=60,y=160)
-
-#         self.amt = tk.StringVar()
-#         self.wlabel3 = CTk.CTkLabel(self.Pframe0,text="ENTER THE AMOUNT",font=('Courier',20))
-#         self.wlabel3.place(x=40,y=230)
-#         self.wentry0 = CTk.CTkEntry(self.Pframe0,textvariable = self.amt)
-#         self.wentry0.place(x=280,y=230)
-#         self.addbut = CTk.CTkButton(self.Pframe0,text="DEPOSIT MONEY",font=('Courier',20),command =self.add)
-#         self.addbut.place(x=40,y=300)
-#         self.withdrawbut = CTk.CTkButton(self.Pframe0,text="WITHDRAW MONEY",font=('Courier',20),command = self.withdraw)
-#         self.withdrawbut.place(x=300,y=300)
-
-#         #edit profile
-#         self.Pframe1 = CTk.CTkFrame(self.wallet,width=700,height=440)
-#         self.Pframe1.place(x=60,y=360)
-#         self.curpwd = tk.StringVar()
-#         self.newpwd = tk.StringVar()
-#         self.newpwd1 = tk.StringVar()
-#         self.wlabel5 = CTk.CTkLabel(self.Pframe1,text="CHANGE YOUR PASSWORD",font=('Courier',30))
-#         self.wlabel5.place(x=20,y=40)
-#         self.wlabel6 = CTk.CTkLabel(self.Pframe1,text="Enter Your Current Password",font=('Courier',25))
-#         self.wlabel6.place(x=40,y=90)
-#         self.wentry1 = CTk.CTkEntry(self.Pframe1,textvariable=self.curpwd,show="*",width=600,height=30)
-#         self.wentry1.place(x=40,y=130)
-#         self.wlabel7 = CTk.CTkLabel(self.Pframe1,text="Enter Your New Password",font=('Courier',25))
-#         self.wlabel7.place(x=40,y=190)
-#         self.wentry2 = CTk.CTkEntry(self.Pframe1,textvariable=self.newpwd,show="*",width=600,height=30)
-#         self.wentry2.place(x=40,y=230)
-#         self.wlabel8 = CTk.CTkLabel(self.Pframe1,text="Re-Enter Your New Password",font=('Courier',25))
-#         self.wlabel8.place(x=40,y=280)
-#         self.wentry3 = CTk.CTkEntry(self.Pframe1,textvariable=self.newpwd1,show="*",width=600,height=30)
-#         self.wentry3.place(x=40,y=320)
-#         self.wbutton0 = CTk.CTkButton(self.Pframe1,text="Change Password",font=('Courier',20),command=self.chgpwd)
-#         self.wbutton0.place(x=450,y=380)
+        #user info
+        self.ud,self.tinv = bef.userd(self.username)
+        self.tinv = (self.tinv*10000)//1
+        self.wlabel0 = CTk.CTkLabel(self.wallet,text=f'HELLO, {self.ud[0][0]}',font=('Courier',30))
+        self.wlabel0.place(x=100,y=60)
+        self.userd0 = CTk.CTkLabel(self.wallet,text=f"UserID: {self.ud[0][1]}",font=('Courier',20))
+        self.userd0.place(x=140,y=140)
+        self.userd1 = CTk.CTkLabel(self.wallet,text=f"Phone No: {self.ud[0][2]}",font=('Courier',20))
+        self.userd1.place(x=140,y=180)
+        self.userd2 = CTk.CTkLabel(self.wallet,text=f"Investment: {self.tinv/10000}  USD",font=('Courier',20))
+        self.userd2.place(x=140,y=220)
+        # self.userpic = ImageTk.PhotoImage(Image.open("profilepic1.png"))
+        # self.userlabel = tk.Label(self.wallet,image=self.userpic)
+        # self.userlabel.place(x=0,y=0)
 
 
-#     def chgpwd(self):
-#         self.curpwd1 = self.curpwd.get()
-#         self.newpwd00 = self.newpwd.get()
-#         self.newpwd01 = self.newpwd1.get()
-
-#         if self.curpwd1=="" or self.newpwd00=="" or self.newpwd01=="":
-#             self.cp0 = tk.messagebox.showinfo("ERROR","FIELD IS EMPTY")
+        #balance info
+        self.wlabel9 = CTk.CTkLabel(self.wallet,text="ACCOUNT HISTORY",font=('Courier',25))
+        self.wlabel9.place(x=850,y=50)
+        self.table_frame = CTk.CTkFrame(self.wallet,width=200,height=200)
+        self.table_frame.place(x=850,y=100)
+        self.table = ttk.Treeview(self.table_frame, columns=("col1", "col2","col3"),height=10)
+        style = ttk.Style()
+        style.configure("Treeview.Heading", font=('Times',20))
+        style.configure("Treeview", font=general_font,rowheight=30)
+        self.table.column("#0", width = 0, stretch = "no")
+        self.table.heading("#1", text="ACTION")
+        self.table.column("#1",width=180)
+        self.table.heading("#2", text="AMOUNT")
+        self.table.column("#2",width=250)
+        self.table.heading("#3", text="TIME")
+        self.table.column("#3", width=250)
+        self.table_scrollbar = tk.Scrollbar(self.table_frame, orient="vertical", command=self.table.yview)
+        self.table_scrollbar.pack(side="right", fill="y")
+        self.table.configure(yscrollcommand=self.table_scrollbar.set)
+        self.table.pack(expand=True, fill="both")
+        self.userb = bef.balinfo(self.username)
+        for i in range(len(self.userb)):
+            entry = self.userb[i]
+            self.table.insert("","end",values=entry[1:4])
         
-#         elif bef.logindatabase(self.username,self.curpwd1) != True:
-#             self.cp2 = tk.messagebox.showinfo("ERROR","CURRENT PASSWORD IS INCORRECT")
+
+        #balance
+        self.Pframe0 = CTk.CTkFrame(self.wallet,width=550,height=380)
+        self.Pframe0.place(x=850,y=420)
+        self.wlabel3 = CTk.CTkLabel(self.Pframe0,text="FUND YOUR WALLET ",font=('Courier',30))
+        self.wlabel3.place(x=20,y=30)
+        self.balance = bef.getbalance(f'{self.username}')
+        self.wlabel1 = CTk.CTkLabel(self.Pframe0,text="BALANCE AVAILABLE",font=('Courier',27))
+        self.wlabel1.place(x=40,y=100)
+        self.wlabel2 = CTk.CTkLabel(self.Pframe0,text=f'{self.balance} USD',font=('Courier',20))
+        self.wlabel2.place(x=60,y=160)
+
+        self.amt = tk.StringVar()
+        self.wlabel3 = CTk.CTkLabel(self.Pframe0,text="ENTER THE AMOUNT",font=('Courier',20))
+        self.wlabel3.place(x=40,y=230)
+        self.wentry0 = CTk.CTkEntry(self.Pframe0,textvariable = self.amt)
+        self.wentry0.place(x=280,y=230)
+        self.addbut = CTk.CTkButton(self.Pframe0,text="DEPOSIT MONEY",font=('Courier',20),command =self.add)
+        self.addbut.place(x=40,y=300)
+        self.withdrawbut = CTk.CTkButton(self.Pframe0,text="WITHDRAW MONEY",font=('Courier',20),command = self.withdraw)
+        self.withdrawbut.place(x=300,y=300)
+
+        #edit profile
+        self.Pframe1 = CTk.CTkFrame(self.wallet,width=700,height=440)
+        self.Pframe1.place(x=60,y=360)
+        self.curpwd = tk.StringVar()
+        self.newpwd = tk.StringVar()
+        self.newpwd1 = tk.StringVar()
+        self.wlabel5 = CTk.CTkLabel(self.Pframe1,text="CHANGE YOUR PASSWORD",font=('Courier',30))
+        self.wlabel5.place(x=20,y=40)
+        self.wlabel6 = CTk.CTkLabel(self.Pframe1,text="Enter Your Current Password",font=('Courier',25))
+        self.wlabel6.place(x=40,y=90)
+        self.wentry1 = CTk.CTkEntry(self.Pframe1,textvariable=self.curpwd,show="*",width=600,height=30)
+        self.wentry1.place(x=40,y=130)
+        self.wlabel7 = CTk.CTkLabel(self.Pframe1,text="Enter Your New Password",font=('Courier',25))
+        self.wlabel7.place(x=40,y=190)
+        self.wentry2 = CTk.CTkEntry(self.Pframe1,textvariable=self.newpwd,show="*",width=600,height=30)
+        self.wentry2.place(x=40,y=230)
+        self.wlabel8 = CTk.CTkLabel(self.Pframe1,text="Re-Enter Your New Password",font=('Courier',25))
+        self.wlabel8.place(x=40,y=280)
+        self.wentry3 = CTk.CTkEntry(self.Pframe1,textvariable=self.newpwd1,show="*",width=600,height=30)
+        self.wentry3.place(x=40,y=320)
+        self.wbutton0 = CTk.CTkButton(self.Pframe1,text="Change Password",font=('Courier',20),command=self.chgpwd)
+        self.wbutton0.place(x=450,y=380)
+
+
+    def chgpwd(self):
+        self.curpwd1 = self.curpwd.get()
+        self.newpwd00 = self.newpwd.get()
+        self.newpwd01 = self.newpwd1.get()
+
+        if self.curpwd1=="" or self.newpwd00=="" or self.newpwd01=="":
+            self.cp0 = tk.messagebox.showinfo("ERROR","FIELD IS EMPTY")
         
-#         elif self.newpwd00 != self.newpwd01:
-#             self.cp1 = tk.messagebox.showinfo("ERROR","PASSWORD DON'T MATCH")
+        elif bef.logindatabase(self.username,self.curpwd1) != True:
+            self.cp2 = tk.messagebox.showinfo("ERROR","CURRENT PASSWORD IS INCORRECT")
+        
+        elif self.newpwd00 != self.newpwd01:
+            self.cp1 = tk.messagebox.showinfo("ERROR","PASSWORD DON'T MATCH")
 
-#         else:
-#             bef.chgpassword(self.username,self.newpwd00)
-#             self.curpwd.set("")
-#             self.newpwd.set("")
-#             self.newpwd1.set("")
-
-
-#     def add(self):
-#         if self.amt.get()=="":
-#             self.ames0 = tk.messagebox.showinfo("ERROR","ENTER SOME AMOUNT")
-#         else:
-#             self.addamt = Decimal(self.amt.get())
-#             if self.addamt == 0 or self.addamt < 0:
-#                 self.ames1 = tk.messagebox.showinfo("INVALID AMOUNT","ENTER SOME AMOUNT")
-#             elif self.addamt > 0:
-#                 self.ames2 = tk.messagebox.askquestion("DEPOSITING MONEY",f"ADDING {self.addamt}USD TO BALANCE")
-#                 if self.ames2 == "yes":
-#                     bef.addbalance(self.username,self.addamt)
-#                 else:
-#                     self.amt.set("")
-
-#     def withdraw(self):
-#         self.balance = bef.getbalance(f'{self.username}')
-#         if self.balance == None:
-#             self.wmes3 = tk.messagebox.showinfo("ERROR","NO BALANCE")
-#         elif self.amt.get()=="":
-#             self.wmes0 = tk.messagebox.showinfo("ERROR","ENTER SOME AMOUNT")
-#         else:
-#             self.withamt = Decimal(self.amt.get())
-#             if self.withamt == 0 or self.withamt < 0:
-#                 self.wmes1 = tk.messagebox.showinfo("INVALID AMOUNT","ENTER SOME AMOUNT")
-#             elif self.balance < self.withamt:
-#                 self.wmes1 = tk.messagebox.showinfo("INVALID AMOUNT",f"INSUFFICIENT BALANCE\nCURRENT BALANCE: {self.balance}")
-#             elif self.withamt > 0:
-#                 self.wmes2 = tk.messagebox.askquestion("DEPOSITING MONEY",f"ADDING {self.withamt}USD TO BALANCE")
-#                 if self.wmes2 == "yes":
-#                     bef.withdrawwallet(self.username,self.withamt)
-#                 else:
-#                     self.amt.set("")
+        else:
+            bef.chgpassword(self.username,self.newpwd00)
+            self.curpwd.set("")
+            self.newpwd.set("")
+            self.newpwd1.set("")
 
 
+    def add(self):
+        if self.amt.get()=="":
+            self.ames0 = tk.messagebox.showinfo("ERROR","ENTER SOME AMOUNT")
+        else:
+            self.addamt = Decimal(self.amt.get())
+            if self.addamt == 0 or self.addamt < 0:
+                self.ames1 = tk.messagebox.showinfo("ERROR","ENTER SOME AMOUNT")
+            elif self.addamt > 0:
+                self.ames2 = tk.messagebox.askquestion("DEPOSIT MONEY",f"ADDING {self.addamt}USD TO ACCOUNT")
+                if self.ames2 == "yes":
+                    bef.addbalance(self.username,self.addamt)
+                    self.amt.set("")
+                else:
+                    self.amt.set("")
+
+    def withdraw(self):
+        self.balance = bef.getbalance(f'{self.username}')
+        if self.balance == None:
+            self.wmes3 = tk.messagebox.showinfo("ERROR","NO BALANCE")
+        elif self.amt.get()=="":
+            self.wmes0 = tk.messagebox.showinfo("ERROR","ENTER SOME AMOUNT")
+        else:
+            self.withamt = Decimal(self.amt.get())
+            if self.withamt == 0 or self.withamt < 0:
+                self.wmes1 = tk.messagebox.showinfo("INVALID AMOUNT","ENTER SOME AMOUNT")
+            elif self.balance < self.withamt:
+                self.wmes1 = tk.messagebox.showinfo("INVALID AMOUNT",f"INSUFFICIENT BALANCE\nCURRENT BALANCE: {self.balance}")
+            elif self.withamt > 0:
+                self.wmes2 = tk.messagebox.askquestion("WITHDRAW MONEY",f"WITHDRAWING {self.withamt}USD FROM ACCOUNT")
+                if self.wmes2 == "yes":
+                    bef.withdrawwallet(self.username,self.withamt)
+                    self.amt.set("")
+                else:
+                    self.amt.set("")
 
 #Main program execution
 if (__name__=="__main__"):
