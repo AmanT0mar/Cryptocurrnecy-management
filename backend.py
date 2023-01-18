@@ -4,6 +4,9 @@ import json
 import pandas as pd
 import threading
 import time
+import hashlib 
+import time 
+from decimal import Decimal
 
 mydb = mysql.connector.connect(host = "localhost", user="Aman", database = "myproj")
 mycursor = mydb.cursor()
@@ -16,12 +19,14 @@ def selectfromusers(username):
     userdata = mycursor.fetchall()
     for i in userdata:
         return i
+
 #FOR SIGNUP    
 def insertintousers(fullname,username,phno,passwd):
     sql = "INSERT INTO USER_INFO VALUES(%s,%s,%s,SHA2(%s,256),0)"
     val = (fullname,username,phno,passwd,)
     mycursor.execute(sql,val)
     mydb.commit()
+
 #FOR LOGIN    
 def logindatabase(username,passwd):
     sql = "SELECT * FROM USER_INFO WHERE USERNAME = %s"
@@ -31,6 +36,7 @@ def logindatabase(username,passwd):
     for i in logindata:
         if hashlib.sha256(passwd.encode()).hexdigest() == i[3]:
             return True
+
 #FOR HISTORICAL DATA    
 def get_his(curname,interval):#interval = 1d,1week,1month,1year 
     #if want more data points use start and end in .get()
@@ -58,6 +64,7 @@ def get_his(curname,interval):#interval = 1d,1week,1month,1year
             time = time + [time__]
     df = pd.DataFrame(list(zip(price,time)),columns = ['price','time'])
     return df
+
 #adding cur to watchlist
 def addtowatchlist(username,curname):
     data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}')
@@ -66,6 +73,7 @@ def addtowatchlist(username,curname):
     sql = f"INSERT INTO WATCHLIST VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{Decimal(a['supply'])},{Decimal(a['marketCapUsd'])},{Decimal(a['volumeUsd24Hr'])})"
     mycursor.execute(sql)
     mydb.commit()
+
 #deleting from watchlist
 def delfromwatchlist(username,curname):
     sql = "DELETE FROM WATCHLIST WHERE USERNAME = %s AND CURNAME = %s"
@@ -73,7 +81,7 @@ def delfromwatchlist(username,curname):
     mycursor.execute(sql, val)
     mydb.commit()
 
- #buying curr
+#buying curr
 def buying(username,curname,quantity):
     amt = Decimal(quantity)
     data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}')
@@ -139,7 +147,7 @@ def selling(username,curname,quantity):
         mycursor.execute(sql2)
 
     mydb.commit()
-    
+
 #GETTING CURRENT BALANCE 
 def getbalance(username):
     sql = "SELECT BALANCE FROM USER_INFO WHERE USERNAME = %s "
@@ -174,31 +182,33 @@ def coinquant(username,curname):
 
 #ADDING TO BALANCE
 def addbalance(username,amount):
+    a = time.time()//1
+    c_t = pd.to_datetime(a,unit='s')
     mycursor.execute(f"UPDATE USER_INFO SET BALANCE = BALANCE + {amount} WHERE USERNAME = '{username}'")
+    mycursor.execute(f"INSERT INTO BALANCE VALUES('{username}','DEPOSITED','{amount}','{c_t}')")
     mydb.commit()
 
 #WITHDRAW FROM WALLET
 def withdrawwallet(username,amount):
+    a = time.time()//1
+    c_t = pd.to_datetime(a,unit='s')
     mycursor.execute(f"UPDATE USER_INFO SET BALANCE = BALANCE - {amount} WHERE USERNAME = '{username}'")
+    mycursor.execute(f"INSERT INTO BALANCE VALUES('{username}','WITHDRAWN','{amount}','{c_t}')")
     mydb.commit()
-    
+
 #CHANGING PASSWORD
 def chgpassword(username,passwd):
     newpwd = hashlib.sha256(passwd.encode()).hexdigest()
     mycursor.execute(f"UPDATE USER_INFO SET PASSWORD = '{newpwd}' WHERE USERNAME = '{username}'")
     mydb.commit()
 
-#Getting currecy of the user from specified table
-def get_curs(username,table_name):
-    mycursor.execute(f"SELECT * FROM {table_name} WHERE USERNAME='{username}'")
-    return mycursor.fetchall()
-    
 #USER DETAILS 
 def userd(username):
     mycursor.execute(f"SELECT * FROM USER_INFO WHERE USERNAME = '{username}'")
     ud0 = mycursor.fetchall()
     mycursor.execute(f"SELECT * FROM HOLDING WHERE USERNAME = '{username}'")
     ud1 = mycursor.fetchall()
+    tot_inv = Decimal(0)
     for i in ud1:
         tot_inv = i[5]
     return ud0 , tot_inv
@@ -209,16 +219,10 @@ def balinfo(username):
     data = mycursor.fetchall()
     return data
 
-
-#get coins list (currency names)
-def get_coin_list(a=None):
-    mycursor.execute(f"SELECT CNAME FROM COINS")
-    data= mycursor.fetchall() 
-    return data
-#get currency id using currency name
-def get_cur_id(curname):
-    mycursor.execute(f"SELECT CID FROM COINS WHERE CNAME='{curname}'")
-    return mycursor.fetchall()[0][0]
+#Getting currecy of the user from specified table
+def get_curs(username,table_name):
+    mycursor.execute(f"SELECT * FROM {table_name} WHERE USERNAME='{username}'")
+    return mycursor.fetchall()
 
 #profit/loss
 def porl(username):
@@ -229,12 +233,17 @@ def porl(username):
         tot_re = tot_re + i[0]
     return tot_re
 
-#From Watchlist
+#From Wishlist
 def fromwatchlist(username,curname):
     mycursor.execute(f"SELECT * FROM WATCHLIST WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
     data = mycursor.fetchall()
     return data
 
+#get currency id using currency name
+def get_cur_id(curname):
+    mycursor.execute(f"SELECT CID FROM COINS WHERE CNAME='{curname}'")
+    return mycursor.fetchall()[0][0]
+    
 #Remove from wishlist
 def rmfromwatchlist(username,curname):
     mycursor.execute(f"DELETE FROM WATCHLIST WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
