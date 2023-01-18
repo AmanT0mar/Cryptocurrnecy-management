@@ -234,3 +234,8 @@ def fromwatchlist(username,curname):
     mycursor.execute(f"SELECT * FROM WATCHLIST WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
     data = mycursor.fetchall()
     return data
+
+#Remove from wishlist
+def rmfromwatchlist(username,curname):
+    mycursor.execute(f"DELETE FROM WATCHLIST WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
+    mydb.commit()
