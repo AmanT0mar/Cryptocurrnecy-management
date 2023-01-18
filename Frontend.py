@@ -523,7 +523,7 @@ class holdlist_frame:
         self.table_frame = CTk.CTkFrame(self.frame,width=1000,height=300)
         self.table_frame.place(x=70,y=150)
         # Create the Treeview
-        self.table = ttk.Treeview(self.table_frame, columns=("col1", "col2", "col3", "col4","col5"),height=10)
+        self.table = ttk.Treeview(self.table_frame, columns=("col1", "col2", "col3", "col4","col5","col6"),height=10)
         style = ttk.Style()
         style.configure("Treeview.Heading", font=('Times',22))
         style.configure("Treeview", font=general_font,rowheight=50)
@@ -537,6 +537,10 @@ class holdlist_frame:
         self.table.heading("#3", text="PRICE")
         self.table.column("#4",width=200)
         self.table.heading("#4", text="QUANTITY")
+        self.table.column("#5",width=200)
+        self.table.heading("#5", text="INVESTED")
+        self.table.column("#6",width=200)
+        self.table.heading("#6", text="RETURNS")
         self.table_scrollbar = tk.Scrollbar(self.table_frame, orient="vertical", command=self.table.yview)
         self.table_scrollbar.pack(side="right", fill="y")
         self.table.configure(yscrollcommand=self.table_scrollbar.set)
@@ -546,7 +550,8 @@ class holdlist_frame:
         curs_data = bef.get_curs(self.username,"holding")
         for i in range(len(curs_data)):
             entry=curs_data[i]
-            self.table.insert("", "end",iid=i+1, text=i+1, values=entry[1:6])
+            a = list(entry[1:6]) + [entry[7]]
+            self.table.insert("", "end",iid=i+1, text=i+1, values=a)
     
     def OnDoubleClick(self,event):
         sel_item = self.table.identify('item',event.x,event.y)
@@ -554,7 +559,7 @@ class holdlist_frame:
         self.main.withdraw()
         cur_id = bef.get_cur_id(curname)
         self.win = CurrencyDetails(self.main,self.username,cur_id)
-
+        
 class CurrencyDetails:
     def __init__(self,main_win,username,curname):
         self.main=main_win
