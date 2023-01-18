@@ -711,8 +711,10 @@ class CurrencyDetails:
     def pressed(self):
         if bef.fromwatchlist(self.username,self.curname) == []:
             bef.addtowatchlist(self.username,self.curname)
+            self.gbutton6.configure(fg_color ="#00AF23" , hover_color="#00AF23")
         else:
-            self.pmes0 = tk.messagebox.showinfo("ERROR","ALREADY IN WISHLIST")
+            bef.rmfromwatchlist(self.username,self.curname)
+            self.gbutton6.configure(fg_color ="#D10202" , hover_color="#D10202")
         
 class Profile:
     def __init__(self,username):
