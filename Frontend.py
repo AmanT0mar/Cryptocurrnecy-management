@@ -801,7 +801,7 @@ class Profile:
 
         self.wallet = CTk.CTkToplevel()
         self.wallet.state("zoomed")
-
+        self.wallet.title("CRYPTOCURRENCY PORTFOLIO MANAGEMENT")
         #user info
         self.ud,self.tinv = bef.userd(self.username)
         self.tinv = (self.tinv*10000000)//1
