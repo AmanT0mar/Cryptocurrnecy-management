@@ -211,7 +211,7 @@ class MainWin:
 class MainWindow:
     def __init__(self,username,op):
         self.username = username
-        self.window = CTk.CTk()
+        self.window = CTk.CTkToplevel()
         #Window will be at maximum windowed size
         self.window.state("zoomed")
         #searchbutton
@@ -367,8 +367,8 @@ class wishlist_frame:
         # Create the Treeview
         self.table = ttk.Treeview(self.table_frame, columns=("col1", "col2", "col3", "col4","col5","col6"),height=10)
         style = ttk.Style()
-        style.configure("Treeview.Heading", font=('Times',50))
-        style.configure("Treeview", font=general_font,rowheight=100)
+        style.configure("Treeview.Heading", font=('Times',22))
+        style.configure("Treeview", font=general_font,rowheight=50)
         self.table.column("#0",width=50)
         self.table.heading("#0", text="SNO")
         self.table.column("#1",width=100)
