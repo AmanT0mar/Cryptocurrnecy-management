@@ -5,15 +5,13 @@ import pandas as pd
 import tkinter as tk
 import re
 import backend as bef
-import mysql.connector
 import customtkinter as CTk
 from tkinter import ttk
 from PIL import ImageTk,Image 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg,NavigationToolbar2Tk
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure 
-mydb = mysql.connector.connect(host = "localhost", user="Aman", database = "myproj")
-mycursor = mydb.cursor()
+
 
 general_font=('Times New Roman', 18)
 small_font=('Times New Roman', 15)
@@ -214,60 +212,91 @@ class MainWindow:
         self.username = username
         self.window = CTk.CTk()
         self.frame = CTk.CTkFrame(master=self.window,
-                                  width=1250,height=850)
-        self.frame.place(x=220,y=0)
+                                  width=1270,height=850)
+        self.frame.place(x=200,y=0)
+        self.side_frame=CTk.CTkFrame(master=self.window,width=200,height=850)
+        self.side_frame.place(x=0,y=0)
         #Window will be at maximum windowed size
         self.window.state('zoomed')
         #Window Title
         self.window.title("Crypto")
 
-        self.user_label = CTk.CTkLabel(master=self.window,text=f"{self.username}",
+        self.user_label = CTk.CTkLabel(master=self.side_frame,text=f"{self.username}",
                           font=large_font)
         self.user_label.place(x=30,y=20)
-        dis=90
+        base=100
+        dis=88
+        but_color='grey16'
+        but_ht=90
+        but_wt=200
+        hov_but=['firebrick3','royal blue','SpringGreen4','red3','turquoise4','orange red']
+        #profile Button
+        self.profile_Button = CTk.CTkButton(master=self.side_frame,
+                                            text="Profile",
+                                            command=self.profile_func,
+                                            height=but_ht,width=but_wt,
+                                            fg_color=but_color,
+                                            hover_color=hov_but[0],
+                                            font=general_font)
+        self.profile_Button.place(x=-5,y=base+(dis*0))
+        
         #Wishlist Button
-        self.wishlist_Button = CTk.CTkButton(master=self.window,
+        self.wishlist_Button = CTk.CTkButton(master=self.side_frame,
                                              text="Wishlist",
                                              command=self.wishlist_func,
-                                             height=50,width=125,
+                                             height=but_ht,width=but_wt,
+                                             fg_color=but_color,
+                                             hover_color=hov_but[1],
                                              font=general_font)
-        self.wishlist_Button.place(x=40,y=100+(dis*0))
+        self.wishlist_Button.place(x=-5,y=base+(dis*1))
         
         #BuyIN Button
-        self.buyin_Button = CTk.CTkButton(master=self.window,
+        self.buyin_Button = CTk.CTkButton(master=self.side_frame,
                             text="BuyIN",
                             command=self.buyin_func,
-                            height=50,width=125,
+                            height=but_ht,width=but_wt,
+                            fg_color=but_color,
+                            hover_color=hov_but[2],
                             font=general_font)
-        self.buyin_Button.place(x=40,y=100+(dis*1))
+        self.buyin_Button.place(x=-5,y=base+(dis*2))
         
         #Sellout Button
-        self.sellout_Button = CTk.CTkButton(master=self.window,
+        self.sellout_Button = CTk.CTkButton(master=self.side_frame,
                               text="Sellout",
                               command=self.sellout_func,
-                              height=50,width=125,
+                              height=but_ht,width=but_wt,
+                              fg_color=but_color,
+                              hover_color=hov_but[3],
                               font=general_font)
-        self.sellout_Button.place(x=40,y=100+(dis*2))
+        self.sellout_Button.place(x=-5,y=base+(dis*3))
         
         #Wishlist Button
-        self.holdlist_Button = CTk.CTkButton(master=self.window,
+        self.holdlist_Button = CTk.CTkButton(master=self.side_frame,
                                text="Holdlist",
                                command=self.holdlist_func,
-                               height=50,width=125,
+                               height=but_ht,width=but_wt,
+                               fg_color=but_color,
+                               hover_color=hov_but[4],
                                font=general_font)
-        self.holdlist_Button.place(x=40,y=100+(dis*3))
+        self.holdlist_Button.place(x=-5,y=base+(dis*4))
         #Exit button
-        self.exit_Button = CTk.CTkButton(master=self.window,
+        self.exit_Button = CTk.CTkButton(master=self.side_frame,
                                         text="Exit",
                                         command=self.exit_func,
-                                        height=50,width=70,
+                                        height=but_ht,width=but_wt,
+                                        fg_color=but_color,
+                                        hover_color=hov_but[5],
                                         font=general_font)
-        self.exit_Button.place(x=40,y=100+(dis*4))
+        self.exit_Button.place(x=-5,y=base+(dis*5))
         
         
         self.window.mainloop()
     #Methods
-    
+    #profile button function
+    def profile_func(self):
+        
+        a = Profile(self.username)
+        a.wallet.mainloop()
     #wishlist button function
     def wishlist_func(self):
         self.frame.destroy()
@@ -297,7 +326,7 @@ class wishlist_frame:
         self.username = username
         self.frame = CTk.CTkFrame (master=self.main,
                                    width=1300,height=850)
-        self.frame.place(x=170,y=0)
+        self.frame.place(x=200,y=0)
         self.title = CTk.CTkLabel(self.frame,
                                   text="Wish List",
                                   font=general_font)
@@ -349,7 +378,7 @@ class boughtlist_frame:
         self.username = username
         self.frame = CTk.CTkFrame (master=self.window,
                                    width=1300,height=850)
-        self.frame.place(x=170,y=0)
+        self.frame.place(x=200,y=0)
         self.title = CTk.CTkLabel(self.frame,
                                   text="Bought",
                                   font=general_font)
@@ -383,7 +412,7 @@ class boughtlist_frame:
         self.table_scrollbar = tk.Scrollbar(self.table_frame, orient="vertical", command=self.table.yview)
         self.table_scrollbar.pack(side="right", fill="y")
         self.table.configure(yscrollcommand=self.table_scrollbar.set)
-        self.table.bind("<Double-1>", self.OnDoubleClick)
+        
         # Pack the Treeview
         self.table.pack(expand=True, fill="both")
         curs_data = bef.get_curs("thejabh","bought")
@@ -402,7 +431,7 @@ class soldlist_frame:
         self.username = username
         self.frame = CTk.CTkFrame (master=self.window,
                                    width=1300,height=850)
-        self.frame.place(x=170,y=0)
+        self.frame.place(x=200,y=0)
         self.title = CTk.CTkLabel(self.frame,
                                   text="Bought",
                                   font=general_font)
@@ -436,7 +465,7 @@ class soldlist_frame:
         self.table_scrollbar = tk.Scrollbar(self.table_frame, orient="vertical", command=self.table.yview)
         self.table_scrollbar.pack(side="right", fill="y")
         self.table.configure(yscrollcommand=self.table_scrollbar.set)
-        self.table.bind("<Double-1>", self.OnDoubleClick)
+        
         # Pack the Treeview
         self.table.pack(expand=True, fill="both")
         curs_data = bef.get_curs("thejabh","sell_out")
@@ -454,9 +483,9 @@ class holdlist_frame:
         
         self.main = main
         self.username = username
-        self.frame = CTk.CTkFrame (master=self.window,
+        self.frame = CTk.CTkFrame (master=self.main,
                                    width=1300,height=850)
-        self.frame.place(x=170,y=0)
+        self.frame.place(x=200,y=0)
         self.title = CTk.CTkLabel(self.frame,
                                   text="Holding",
                                   font=general_font)
