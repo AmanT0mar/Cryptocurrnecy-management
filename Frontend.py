@@ -523,7 +523,8 @@ class CurrencyDetails:
         self.gLabel2.place(x=70,y=100)
         self.gLabel3 = CTk.CTkLabel(self.mainframe,text="Profit/Loss",font=('Courier',15))
         self.gLabel3.place(x=70,y=130)
-        
+        self.gbutton6 = CTk.CTkButton(self.mainframe,text="❤",font=('Times',20),width=40,command = self.pressed)
+        self.gbutton6.place(x=600,y=60)
         
         #Button to choose time
         self.tab_view = CTk.CTkTabview(self.mainframe,width=600,height=450,
@@ -706,7 +707,13 @@ class CurrencyDetails:
         self.username = username
         a = Profile(self.username)
         a.wallet.mainloop()
-
+        
+    def pressed(self):
+        if bef.fromwatchlist(self.username,self.curname) == []:
+            bef.addtowatchlist(self.username,self.curname)
+        else:
+            self.pmes0 = tk.messagebox.showinfo("ERROR","ALREADY IN WISHLIST")
+        
 class Profile:
     def __init__(self,username):
         self.username = username
