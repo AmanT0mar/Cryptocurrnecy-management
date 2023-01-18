@@ -248,3 +248,20 @@ def get_cur_id(curname):
 def rmfromwatchlist(username,curname):
     mycursor.execute(f"DELETE FROM WATCHLIST WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
     mydb.commit()
+#getting coin details
+def coind(curname):
+    mycursor.execute(f"SELECT * FROM COINS WHERE CID = '{curname}'")
+    data = mycursor.fetchall()
+    return data[0]
+
+#image path
+def get_path(image):
+    str = 'D:\\Coins\\'
+    a = str + image 
+    return a
+
+#currency data
+def get_cur(curname):
+    data = requests.get("http://api.coincap.io/v2/assets/"+f'{curname}')
+    data = data.json()
+    return data['data']
