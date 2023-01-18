@@ -511,7 +511,8 @@ class CurrencyDetails:
         
         self.username = username
         self.curname = curname
-        
+        self.curp = bef.current_data(self.curname)
+        self.curp = ((self.curp['price'][0])*1000000)//1
         # self.root = CTk.CTk()
         self.root = CTk.CTk()
         self.root.state("zoomed")
@@ -521,10 +522,14 @@ class CurrencyDetails:
         self.gLabel1.place(x=70,y=60)
         self.gLabel2 = CTk.CTkLabel(self.mainframe,text="PRICE",font=('Courier',30))
         self.gLabel2.place(x=70,y=100)
-        self.gLabel3 = CTk.CTkLabel(self.mainframe,text="Profit/Loss",font=('Courier',15))
-        self.gLabel3.place(x=70,y=130)
-        self.gbutton6 = CTk.CTkButton(self.mainframe,text="❤",font=('Times',20),width=40,command = self.pressed)
-        self.gbutton6.place(x=600,y=60)
+        self.gLabel2 = CTk.CTkLabel(self.mainframe,text=f"{self.curp/1000000} USD",font=('Courier',30))
+        self.gLabel2.place(x=70,y=110)
+        if bef.fromwatchlist(self.username,self.curname) == []:
+            self.gbutton6 = CTk.CTkButton(self.mainframe,text="❤",font=('Times',20),width=40,fg_color="#D10202",hover_color ="#D10202",command = self.pressed)
+            self.gbutton6.place(x=600,y=60)
+        else:
+            self.gbutton6 = CTk.CTkButton(self.mainframe,text="❤",font=('Times',20),width=40,fg_color="#00AF23",hover_color ="#00AF23",command = self.pressed)
+            self.gbutton6.place(x=600,y=60)
         
         #Button to choose time
         self.tab_view = CTk.CTkTabview(self.mainframe,width=600,height=450,
