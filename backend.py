@@ -228,3 +228,9 @@ def porl(username):
     for i in d:
         tot_re = tot_re + i[0]
     return tot_re
+
+#From Watchlist
+def fromwatchlist(username,curname):
+    mycursor.execute(f"SELECT * FROM WATCHLIST WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
+    data = mycursor.fetchall()
+    return data
