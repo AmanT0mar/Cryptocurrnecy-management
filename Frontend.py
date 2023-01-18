@@ -646,7 +646,7 @@ class CurrencyDetails:
         
         
         
-
+        self.balance = bef.getbalance(f'{self.username}')
         #curent data
         self.curquant = bef.coinquant(self.username,self.curname)
         self.cLabel1 = CTk.CTkLabel(self.mainframe,text = f"CURRENT QUANTITY: {self.curquant}",font=('Courier',20))
@@ -728,22 +728,21 @@ class CurrencyDetails:
             # turing button ON:
             btnState = True
     
-    def selling(self):
-        sell_win = CTk.CTkInputDialog(text="Enter the quantity of crypto currency:",title="SELL OUT")
-        amt=sell_win.get_input()
+        def selling(self):
+            amt =  self.qentry.get()
         if amt == "":
-            self.mes7 = tk.messagebox.showinfo("ERROR","ENTER SOME AMOUNT")
+            self.mes7 = tk.messagebox.showinfo("ERROR MESSAGE","ENTER SOME AMOUNT")
         else:
             self.coinq1 = Decimal(amt)
             self.p1 = bef.current_data(f"{self.curname}")
             self.curp1 = self.p1['price'][0]
-            if self.curquant == 0 or self.curquant < 0:
-                self.Smes0 = tk.messagebox.showinfo("ERROR MESSAGE","ENTER VALID AMOUNT")
+            if self.curquant == 0:
+                self.Smes0 = tk.messagebox.showinfo("ERROR MESSAGE","YOU CURRENTLY HOLD 0 COINS")
             else:
-                if self.coinq1 == 0:
-                    self.Smes1 = tk.messagebox.showinfo("INVALID AMOUNT","You Entered 0\nEnter Valid Amount")
+                if self.coinq1 <= 0:
+                    self.Smes1 = tk.messagebox.showinfo("ERROR MESSAGE","You Entered 0\nEnter Valid Amount")
                 elif self.coinq1 > self.curquant:
-                    self.Smes2 = tk.messagebox.showinfo("NOT ENOUGH COINS",f"YOU CURRENT ONLY HOLD {self.curquant}")
+                    self.Smes2 = tk.messagebox.showinfo("ERROR MESSAGE",f"YOU CURRENT ONLY HOLD {self.curquant}")
                 else:
                     self.Smes3 = tk.messagebox.askquestion("SELLING",f"ORDER TO SELL {self.coinq1} AT PRICE {self.curp1}")
                     if self.Smes3 == "yes":
@@ -752,22 +751,24 @@ class CurrencyDetails:
                         self.cLabel1.configure(text=f"CURRENT QUANTITY: {self.curquant}")                
 
     def buying(self):
-        buy_win = CTk.CTkInputDialog(text="Enter the quantity of crypto currency:",title="BUY IN")
-        
-        self.coinq2 =Decimal(buy_win.get_input())
+        coinq2 = self.qentry.get()
         self.p2 = bef.current_data(f"{self.curname}")
         self.curp2 = Decimal(self.p2['price'][0])
-        if self.coinq2 == 0 or self.coinq2 < 0:
-            self.Bmes1 = tk.messagebox.showinfo("INVALID AMOUNT","Enter Valid Amount")
-        elif self.balance < self.curp2 * self.coinq2:
-            self.maxamt = self.balance/self.curp2
-            self.Bmes2 = tk.messagebox.showinfo("NOT ENOUGH FUNDS",f"THE QUANTITY SHOULD BE LESS THAN {self.maxamt}")
+        if coinq2 == "":
+            self.Bmes0 = tk.messagebox.showinfo("ERROR MESSAGE","ENTER SOME AMOUNT")
         else:
-            self.Bmes3 = tk.messagebox.askquestion("BUYING",f"ORDER TO BUY {self.coinq2} AT PRICE {self.curp2}")
-            if self.Bmes3 == "yes":
-                bef.buying(self.username,self.curname,self.coinq2)
-                self.curquant = bef.coinquant(self.username,self.curname)
-                self.cLabel1.configure(text=f"CURRENT QUANTITY: {self.curquant}")
+            self.coinq2 = Decimal(coinq2)
+            if self.coinq2 <=0:
+                self.Bmes1 = tk.messagebox.showinfo("INVALID AMOUNT","Enter Valid Amount")
+            elif self.balance < self.curp2 * self.coinq2:
+                self.maxamt = self.balance/self.curp2
+                self.Bmes2 = tk.messagebox.showinfo("NOT ENOUGH FUNDS",f"THE QUANTITY SHOULD BE LESS THAN {self.maxamt}")
+            else:
+                self.Bmes3 = tk.messagebox.askquestion("BUYING",f"ORDER TO BUY {self.coinq2} AT PRICE {self.curp2}")
+                if self.Bmes3 == "yes":
+                    bef.buying(self.username,self.curname,self.coinq2)
+                    self.curquant = bef.coinquant(self.username,self.curname)
+                    self.cLabel1.configure(text=f"CURRENT QUANTITY: {self.curquant}")
        
     def graphing(self,time,tab):
         self.interval = time
