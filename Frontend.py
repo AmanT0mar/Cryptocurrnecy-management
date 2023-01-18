@@ -423,22 +423,24 @@ class boughtlist_frame:
         self.table_frame = CTk.CTkFrame(self.frame,width=1000,height=300)
         self.table_frame.place(x=70,y=150)
         # Create the Treeview
-        self.table = ttk.Treeview(self.table_frame, columns=("col1", "col2", "col3", "col4","col5"),height=10)
+        self.table = ttk.Treeview(self.table_frame, columns=("col1", "col2", "col3", "col4","col5","col 6"),height=10)
         style = ttk.Style()
         style.configure("Treeview.Heading", font=('Times',22))
         style.configure("Treeview", font=general_font,rowheight=50)
         self.table.column("#0",width=70)
         self.table.heading("#0", text="SNO")
-        self.table.column("#1",width=180)
+        self.table.column("#1",width=100)
         self.table.heading("#1", text="SYMBOL")
-        self.table.column("#2",width=200)
+        self.table.column("#2",width=100)
         self.table.heading("#2", text="CURRENCY")
-        self.table.column("#3",width=500)
+        self.table.column("#3",width=250)
         self.table.heading("#3", text="PRICE")
-        self.table.column("#4",width=200)
+        self.table.column("#4",width=250)
         self.table.heading("#4", text="QUANTITY")
-        self.table.column("#5",width=200)
+        self.table.column("#5",width=300)
         self.table.heading("#5", text="TOTAL PRICE")
+        self.table.column("#6",width=250)
+        self.table.heading("#6", text="BUY TIME")
         self.table_scrollbar = tk.Scrollbar(self.table_frame, orient="vertical", command=self.table.yview)
         self.table_scrollbar.pack(side="right", fill="y")
         self.table.configure(yscrollcommand=self.table_scrollbar.set)
@@ -448,12 +450,7 @@ class boughtlist_frame:
         curs_data = bef.get_curs(self.username,"bought")
         for i in range(len(curs_data)):
             entry=curs_data[i]
-            self.table.insert("", "end",iid=i+1, text=i+1, values=entry[1:6])
-    
-    # def OnDoubleClick(self,event):
-    #     sel_item = self.table.identify('item',event.x,event.y)
-    #     cur = self.table.item(sel_item)['values'][1]
-    #     self.plot_window(cur)
+            self.table.insert("", "end",iid=i+1, text=i+1, values=entry[1:7])
 
 class soldlist_frame:
     def __init__(self,window,username):
