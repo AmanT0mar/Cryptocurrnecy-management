@@ -8,11 +8,11 @@ import re
 import backend as bef
 import customtkinter as CTk
 from tkinter import ttk
-# from PIL import ImageTk,Image 
+from PIL import ImageTk,Image 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg#,NavigationToolbar2Tk
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure 
-
+import sv_ttk 
 
 general_font=('Times New Roman', 18)
 small_font=('Times New Roman', 15)
@@ -23,26 +23,21 @@ class MainWin:
     def __init__(self):
         self.win = CTk.CTk()
         self.win.state("zoomed")
+        sv_ttk.set_theme("dark")
         self.win.title("CRYPTOCURRENCY PORTFOLIO MANAGEMENT")
         self.frame = CTk.CTkFrame(self.win,
                                   width=1100,height=860)
         self.frame.place(x=370,y=0)
-        # self.bg = CTk.CTkImage(Image.open("back_1.jpg"),size=(1100,860))                          
-        # self.bgframe = CTk.CTkLabel(self.frame,text="",image=self.bg)
-        # self.bgframe.place(x=0,y=0)
-        self.user_ = CTk.CTkLabel(self.frame,
-                                  text="CRYPTOCURRENCY PORTFOLIO MANAGEMENT",
-                                  justify='center',
-                                  text_color='#308849',
-                                  font=large_font)
-        self.user_.place(x=120,y=150)
+        self.bg = CTk.CTkImage(Image.open(r"back_1.jpg"),size=(1100,860))                         
+        self.bgframe = CTk.CTkLabel(self.frame,text="",image=self.bg)
+        self.bgframe.place(x=0,y=0)
 
     def login(self):
-        self.label0 = CTk.CTkLabel(self.win,text="WELCOME",font =large_font)
+        self.label0 = CTk.CTkLabel(self.win,text="WELCOME\nTO\nCPM",font =large_font)
         self.label0.place(x=120,y=30)
         self.login_frame = CTk.CTkFrame(self.win,
                                         width=350,height=400)
-        self.login_frame.place(x=10,y=150)
+        self.login_frame.place(x=10,y=190)
         self.title = CTk.CTkLabel(self.login_frame,
                                   text="LOGIN",
                                   font=('Times New Roman',28))
@@ -85,6 +80,16 @@ class MainWin:
                                        corner_radius=18,
                                        hover_color= "#009A1F",
                                        fg_color = "#00AF23").place(x=100,y=310)
+        self.exit_but = CTk.CTkButton(self.win,
+                                        text="EXIT",
+                                        command = self.exit_w,
+                                        height=40,
+                                        width=150,
+                                        corner_radius=18,
+                                        hover_color= "#009A1F",
+                                        fg_color = "#00AF23").place(x=110,y=680)
+    def exit_w(self):
+        exit()
     def signup(self):
         
         self.signup_win = CTk.CTkToplevel(self.win)
@@ -199,9 +204,10 @@ class MainWin:
         self.passwdl = self.passwd_varl.get()
         
         if bef.logindatabase(self.name,self.passwdl) == True:
-            # self.login_frame.destroy()
+            self.name_varl.set("")
+            self.passwd_varl.set("")
             self.win.withdraw()
-            main =MainWindow(self.name,'W')   
+            main =MainWindow(self.win,self.name,'W')   
         else:
             self.ue2 = CTk.CTkLabel(self.login_frame,text="USERNAME AND PASSWORD DOESN'T MATCH",text_color='#f00',font=small_font)
             self.ue2.place(x=10,y=200)
@@ -209,23 +215,23 @@ class MainWin:
             self.passwd_varl.set("")
 #WINDOW FOR TABLES
 class MainWindow:
-    def __init__(self,username,op):
+    def __init__(self,main,username,op):
         self.username = username
+        self.login_win=main
         self.window = CTk.CTkToplevel()
         #Window will be at maximum windowed size
         self.window.state("zoomed")
-        #searchbutton
-        self.searchframe=CTk.CTkFrame(self.window,width=1000,height=50)
-        self.searchframe.place(x=450,y=70)
-        self.cname = tk.StringVar()
-        self.e1 = CTk.CTkEntry(self.searchframe,textvariable = self.cname,width=250)
-        self.e1.place(x=0,y=0) # entry    
 
-        self.b1 = CTk.CTkButton(self.searchframe,text="Search",font=general_font,width=40,command = self.search)
-        self.b1.place(x=300,y=0)
+        #searchbutton
+        self.cname = tk.StringVar()
+        self.e1 = CTk.CTkEntry(self.window,textvariable = self.cname,width=250,height=30,font=general_font)
+        self.e1.place(x=550,y=50) # entry    
+
+        self.b1 = CTk.CTkButton(self.window,text="🔍",font=general_font,width=40,command = self.search)
+        self.b1.place(x=850,y=50)
 
         #Window Title
-        self.window.title("Crypto")
+        self.window.title("CRYPTOCURRENCY PORTFOLIO MANAGEMENT")
         self.frame = CTk.CTkFrame(self.window,
                                   width=1270,height=850)
         self.frame.place(x=200,y=0)
@@ -239,7 +245,7 @@ class MainWindow:
         dis=88
         but_color='grey16'
         but_ht=90
-        but_wt=200
+        but_wt=210
         hov_but=['firebrick3','royal blue','SpringGreen4','red3','turquoise4','orange red']
         #profile Button
         self.profile_Button = CTk.CTkButton(master=self.side_frame,
@@ -253,42 +259,42 @@ class MainWindow:
         
         #Wishlist Button
         self.wishlist_Button = CTk.CTkButton(master=self.side_frame,
-                                             text="Wishlist",
-                                             command=self.wishlist_func,
-                                             height=but_ht,width=but_wt,
-                                             fg_color=but_color,
-                                             hover_color=hov_but[1],
-                                             font=general_font)
+                                            text="Wishlist",
+                                            command=self.wishlist_func,
+                                            height=but_ht,width=but_wt,
+                                            fg_color=but_color,
+                                            hover_color=hov_but[1],
+                                            font=general_font)
         self.wishlist_Button.place(x=-5,y=base+(dis*1))
         
         #BuyIN Button
         self.buyin_Button = CTk.CTkButton(master=self.side_frame,
-                            text="BuyIN",
-                            command=self.buyin_func,
-                            height=but_ht,width=but_wt,
-                            fg_color=but_color,
-                            hover_color=hov_but[2],
-                            font=general_font)
+                                            text="BuyIN",
+                                            command=self.buyin_func,
+                                            height=but_ht,width=but_wt,
+                                            fg_color=but_color,
+                                            hover_color=hov_but[2],
+                                            font=general_font)
         self.buyin_Button.place(x=-5,y=base+(dis*2))
         
         #Sellout Button
         self.sellout_Button = CTk.CTkButton(master=self.side_frame,
-                              text="Sellout",
-                              command=self.sellout_func,
-                              height=but_ht,width=but_wt,
-                              fg_color=but_color,
-                              hover_color=hov_but[3],
-                              font=general_font)
+                                            text="Sellout",
+                                            command=self.sellout_func,
+                                            height=but_ht,width=but_wt,
+                                            fg_color=but_color,
+                                            hover_color=hov_but[3],
+                                            font=general_font)
         self.sellout_Button.place(x=-5,y=base+(dis*3))
         
         #Wishlist Button
         self.holdlist_Button = CTk.CTkButton(master=self.side_frame,
-                               text="Holdlist",
-                               command=self.holdlist_func,
-                               height=but_ht,width=but_wt,
-                               fg_color=but_color,
-                               hover_color=hov_but[4],
-                               font=general_font)
+                                                text="Holdlist",
+                                                command=self.holdlist_func,
+                                                height=but_ht,width=but_wt,
+                                                fg_color=but_color,
+                                                hover_color=hov_but[4],
+                                                font=general_font)
         self.holdlist_Button.place(x=-5,y=base+(dis*4))
         #Exit button
         self.exit_Button = CTk.CTkButton(master=self.side_frame,
@@ -318,7 +324,7 @@ class MainWindow:
             self.smes0 = tk.messagebox.showinfo("ERROR","ENTER CRYPTONAME")
         else:
             self.window.withdraw()
-            a = CurrencyDetails(self.window,self.username,self.curr)
+            a = CurrencyDetails(self.window,self.login_win,self.username,self.curr)
             self.curr.set("")
     #profile button function
     def profile_func(self):
@@ -328,7 +334,7 @@ class MainWindow:
     #wishlist button function
     def wishlist_func(self):
         self.frame.destroy()
-        self.new_frame = wishlist_frame(self.window,self.username)
+        self.new_frame = wishlist_frame(self.window,self.login_win,self.username)
         
     #BuyIN button function
     def buyin_func(self):
@@ -341,16 +347,18 @@ class MainWindow:
     #Holdlist button function
     def holdlist_func(self):
         self.frame.destroy()
-        self.new_frame = holdlist_frame(self.window,self.username)
+        self.new_frame = holdlist_frame(self.window,self.login_win,self.username)
     #Exit function
     def exit_func(self):
-        self.window.destroy()
-        exit()
+        self.window.withdraw()
+        self.login_win.deiconify()
+        self.login_win.state("zoomed")
 
 class wishlist_frame:
-    def __init__(self,window,username):
+    def __init__(self,window,main,username):
         self.main = window
         self.username = username
+        self.login_win=main
         self.frame = CTk.CTkFrame (master=self.main,
                                    width=1300,height=850)
         self.frame.place(x=200,y=150)
@@ -363,25 +371,25 @@ class wishlist_frame:
         
         #-------------TABLE-----------------
         self.table_frame = CTk.CTkFrame(self.frame,width=1000,height=700)
-        self.table_frame.place(x=100,y=150)
+        self.table_frame.place(x=50,y=150)
         # Create the Treeview
         self.table = ttk.Treeview(self.table_frame, columns=("col1", "col2", "col3", "col4","col5","col6"),height=10)
         style = ttk.Style()
         style.configure("Treeview.Heading", font=('Times',22))
         style.configure("Treeview", font=general_font,rowheight=50)
-        self.table.column("#0",width=50)
+        self.table.column("#0",width=70)
         self.table.heading("#0", text="SNO")
-        self.table.column("#1",width=100)
+        self.table.column("#1",width=200)
         self.table.heading("#1", text="SYMBOL")
-        self.table.column("#2",width=100)
+        self.table.column("#2",width=200)
         self.table.heading("#2", text="CURRENCY")
         self.table.column("#3",width=250) 
         self.table.heading("#3", text="PRICE")
-        self.table.column("#4",width=300)
+        self.table.column("#4",width=250)
         self.table.heading("#4", text="SUPPLY")
-        self.table.column("#5",width=300)
+        self.table.column("#5",width=250)
         self.table.heading("#5", text="MARKETCAP")
-        self.table.column("#6",width=300)
+        self.table.column("#6",width=250)
         self.table.heading("#6", text="VOLUME")
         self.table_scrollbar = tk.Scrollbar(self.table_frame, orient="vertical", command=self.table.yview)
         self.table_scrollbar.pack(side="right", fill="y")
@@ -398,7 +406,7 @@ class wishlist_frame:
         curname = self.table.item(sel_item)['values'][1]
         self.main.withdraw()
         cur_id = bef.get_cur_id(curname)
-        self.win = CurrencyDetails(self.main,self.username,cur_id)
+        self.win = CurrencyDetails(self.main,self.login_win,self.username,cur_id)
 
 
 class boughtlist_frame:
@@ -421,7 +429,7 @@ class boughtlist_frame:
         # self.plot_graph.place(x=300,y=10)
         #-------------TABLE-----------------
         self.table_frame = CTk.CTkFrame(self.frame,width=1000,height=300)
-        self.table_frame.place(x=70,y=150)
+        self.table_frame.place(x=50,y=150)
         # Create the Treeview
         self.table = ttk.Treeview(self.table_frame, columns=("col1", "col2", "col3", "col4","col5","col 6"),height=10)
         style = ttk.Style()
@@ -429,15 +437,15 @@ class boughtlist_frame:
         style.configure("Treeview", font=general_font,rowheight=50)
         self.table.column("#0",width=70)
         self.table.heading("#0", text="SNO")
-        self.table.column("#1",width=100)
+        self.table.column("#1",width=200)
         self.table.heading("#1", text="SYMBOL")
-        self.table.column("#2",width=100)
+        self.table.column("#2",width=200)
         self.table.heading("#2", text="CURRENCY")
         self.table.column("#3",width=250)
         self.table.heading("#3", text="PRICE")
         self.table.column("#4",width=250)
         self.table.heading("#4", text="QUANTITY")
-        self.table.column("#5",width=300)
+        self.table.column("#5",width=250)
         self.table.heading("#5", text="TOTAL PRICE")
         self.table.column("#6",width=250)
         self.table.heading("#6", text="BUY TIME")
@@ -451,6 +459,11 @@ class boughtlist_frame:
         for i in range(len(curs_data)):
             entry=curs_data[i]
             self.table.insert("", "end",iid=i+1, text=i+1, values=entry[1:7])
+    
+    # def OnDoubleClick(self,event):
+    #     sel_item = self.table.identify('item',event.x,event.y)
+    #     cur = self.table.item(sel_item)['values'][1]
+    #     self.plot_window(cur)
 
 class soldlist_frame:
     def __init__(self,window,username):
@@ -471,7 +484,7 @@ class soldlist_frame:
         # self.plot_graph.place(x=300,y=10)
         #-------------TABLE-----------------
         self.table_frame = CTk.CTkFrame(self.frame,width=1000,height=300)
-        self.table_frame.place(x=70,y=150)
+        self.table_frame.place(x=50,y=150)
         # Create the Treeview
         self.table = ttk.Treeview(self.table_frame, columns=("col1", "col2", "col3", "col4","col5","col6"),height=10)
         style = ttk.Style()
@@ -479,15 +492,15 @@ class soldlist_frame:
         style.configure("Treeview", font=general_font,rowheight=50)
         self.table.column("#0",width=70)
         self.table.heading("#0", text="SNO")
-        self.table.column("#1",width=100)
+        self.table.column("#1",width=200)
         self.table.heading("#1", text="SYMBOL")
-        self.table.column("#2",width=100)
+        self.table.column("#2",width=200)
         self.table.heading("#2", text="CURRENCY")
         self.table.column("#3",width=250)
         self.table.heading("#3", text="PRICE")
         self.table.column("#4",width=250)
         self.table.heading("#4", text="QUANTITY")
-        self.table.column("#5",width=300)
+        self.table.column("#5",width=250)
         self.table.heading("#5", text="TOTAL RETURNS")
         self.table.column("#6",width=250)
         self.table.heading("#6", text="SELL TIME")
@@ -501,11 +514,17 @@ class soldlist_frame:
         for i in range(len(curs_data)):
             entry=curs_data[i]
             self.table.insert("", "end",iid=i+1, text=i+1, values=entry[1:7])
-            
+    
+    # def OnDoubleClick(self,event):
+    #     sel_item = self.table.identify('item',event.x,event.y)
+    #     cur = self.table.item(sel_item)['values'][1]
+    #     self.plot_window(cur)
+
 class holdlist_frame:
-    def __init__(self,main,username):
-        self.main = main
+    def __init__(self,window,main,username):
+        self.main = window
         self.username = username
+        self.login_win=main
         self.frame = CTk.CTkFrame (master=self.main,
                                    width=1300,height=850)
         self.frame.place(x=200,y=150)
@@ -533,13 +552,13 @@ class holdlist_frame:
         self.table.heading("#1", text="SYMBOL")
         self.table.column("#2",width=200)
         self.table.heading("#2", text="CURRENCY")
-        self.table.column("#3",width=500)
+        self.table.column("#3",width=250)
         self.table.heading("#3", text="PRICE")
         self.table.column("#4",width=200)
         self.table.heading("#4", text="QUANTITY")
-        self.table.column("#5",width=200)
+        self.table.column("#5",width=250)
         self.table.heading("#5", text="INVESTED")
-        self.table.column("#6",width=200)
+        self.table.column("#6",width=250)
         self.table.heading("#6", text="RETURNS")
         self.table_scrollbar = tk.Scrollbar(self.table_frame, orient="vertical", command=self.table.yview)
         self.table_scrollbar.pack(side="right", fill="y")
@@ -558,11 +577,12 @@ class holdlist_frame:
         curname = self.table.item(sel_item)['values'][1]
         self.main.withdraw()
         cur_id = bef.get_cur_id(curname)
-        self.win = CurrencyDetails(self.main,self.username,cur_id)
-        
+        self.win = CurrencyDetails(self.main,self.login_win,self.username,cur_id)
+
 class CurrencyDetails:
-    def __init__(self,main_win,username,curname):
+    def __init__(self,main_win,login,username,curname):
         self.main=main_win
+        self.login_win=login
         global btnState
         btnState=False# initially navbar is closed
         
@@ -570,9 +590,9 @@ class CurrencyDetails:
         self.curname = curname
         self.curp = bef.current_data(self.curname)
         self.curp = ((self.curp['price'][0])*1000000)//1
-        # self.root = CTk.CTk()
-        self.root = CTk.CTk()
+        self.root = CTk.CTkToplevel()
         self.root.state("zoomed")
+        self.root.title("CRYPTOCURRENCY PORTFOLIO MANAGEMENT")
         self.mainframe = CTk.CTkFrame(self.root,width=1500,height=1000)
         self.mainframe.place(x=0,y=0)
         #crypto details
@@ -598,10 +618,10 @@ class CurrencyDetails:
         self.cmarketcap.place(x=800,y=330)
         if bef.fromwatchlist(self.username,self.curname) == []:
             self.gbutton6 = CTk.CTkButton(self.mainframe,text="❤",font=('Times',20),width=40,fg_color="#D10202",hover_color ="#D10202",command = self.pressed)
-            self.gbutton6.place(x=600,y=60)
+            self.gbutton6.place(x=600,y=55)
         else:
             self.gbutton6 = CTk.CTkButton(self.mainframe,text="❤",font=('Times',20),width=40,fg_color="#00AF23",hover_color ="#00AF23",command = self.pressed)
-            self.gbutton6.place(x=600,y=60)
+            self.gbutton6.place(x=580,y=60)
         
         #Button to choose time
         self.tab_view = CTk.CTkTabview(self.mainframe,width=600,height=450,
@@ -613,6 +633,7 @@ class CurrencyDetails:
         self.tab_view.add('1M')
         self.tab_view.add('1Y')
         self.tab_view.set('1D')
+        # self.tab_view.bind("<Double-1>", self.OnDoubleClick)
         color='grey23'
         #menu frame
         self.menu = CTk.CTkFrame(self.mainframe,fg_color='grey13',width=1500,height=50)
@@ -642,70 +663,49 @@ class CurrencyDetails:
         CTk.CTkButton(self.navRoot,text='SELLOUT',width=300,height=50,font=general_font,
                       hover_color='yellow',text_color='black',fg_color=color,command=lambda: self.back_to_main('S')).place(x=-10,y=398)
         CTk.CTkButton(self.navRoot,text='LOG OUT',width=300,height=50,font=general_font,
-                      hover_color='white',text_color='black',fg_color=color,command=lambda: self.back_to_main('L')).place(x=-10,y=445)
+                      hover_color='white',text_color='black',fg_color=color,command=lambda: self.log_out()).place(x=-10,y=445)
         
         
         
-        self.balance = bef.getbalance(f'{self.username}')
+
         #curent data
         self.curquant = bef.coinquant(self.username,self.curname)
         self.cLabel1 = CTk.CTkLabel(self.mainframe,text = f"CURRENT QUANTITY: {self.curquant}",font=('Courier',20))
-        self.cLabel1.place(x=900,y=450)
-
+        self.cLabel1.place(x=850,y=480)
+        #label for quantity
+        self.q = tk.StringVar()
+        self.qlabel = CTk.CTkLabel(self.mainframe,text="ENTER QUANTITY",font=('Courier',20))
+        self.qlabel.place(x=800,y=550)
+        self.qentry = CTk.CTkEntry(self.mainframe,textvariable=self.q)
+        self.qentry.place(x=1050,y=550)
         #selling
         self.sellingc = CTk.CTkButton(self.mainframe,text="SELL",font=('Courier',20),command=self.selling)
-        self.sellingc.place(x=800,y=620)
+        self.sellingc.place(x=1050,y=620)
 
         #buying
         self.buyingc = CTk.CTkButton(self.mainframe,text="BUY",font=('Courier',20),command=self.buying)
-        self.buyingc.place(x=1000,y=620)
+        self.buyingc.place(x=800,y=620)
 
         #initially 24hrs graph
         self.graphing('1d',self.tab_view.tab('1D'))
-        
-        # #search bar 
-        # self.my_list=['1inch Network', 'Aave', 'Algorand', 'Arweave', 'Avalanche', 'Axie Infinity', 'Balancer', 'Basic Attention Token', 'BNB', 'Binance USD', 'Bitcoin', 'Bitcoin BEP2', 'Bitcoin Cash', 'Bitcoin Gold', 'Bitcoin SV', 'Cardano', 'Casper', 'Celo', 'Chainlink', 'Chiliz', 'Compound', 'Convex Finance', 'Cosmos', 'Crypto.com Coin', 'Curve DAO Token', 'Dash', 'Decentraland', 'Decred', 'Dogecoin', 'eCash', 'MultiversX', 'Enjin Coin', 'EOS', 'Ethereum', 'Ethereum Classic', 'Fantom', 'Fei Protocol', 'Filecoin', 'Flow', 'Frax', 'Frax Share', 'FTX Token', 'Gala', 'GateToken', 'Hedera Hashgraph', 'Helium', 'Holo', 'Huobi Token', 'Internet Computer', 'IOTA', 'Kava', 'Klaytn', 'KuCoin Token', 'Kusama', 'Lido DAO', 'Litecoin', 'Loopring', 'Maker', 'Mina', 'Monero', 'Multi Collateral DAI', 'NEAR Protocol', 'NEM', 'Neo', 'Nexo', 'Oasis Network', 'OKB', 'PancakeSwap', 'Polkadot', 'Polygon', 'Quant', 'Ravencoin', 'Rocket Pool', 'Shiba Inu', 'Solana', 'Stacks', 'Stellar', 'SushiSwap', 'Synthetix', 'Terra', 'Tether', 'Tezos', 'The Graph', 'The Sandbox', 'THETA', 'Theta Fuel', 'THORChain', 'TRON', 'TrueUSD', 'Trust Wallet Token', 'Uniswap', 'UNUS SED LEO', 'USD Coin', 'VeChain', 'WOO Network', 'Wrapped Bitcoin', 'XinFin Network', 'XRP', 'Zcash', 'Zilliqa']
-
-        
-        # self.e1_str=tk.StringVar()  # string variable   
-        # self.e1=CTk.CTkEntry(self.mainframe,textvariable=self.e1_str,width=250,font=general_font) # entry    
-        # self.e1.place(x=300,y=120)
-        # self.l1 = tk.Listbox(self.mainframe,height=0,font=general_font,relief='flat',
-        # bg='red',highlightcolor= 'SystemButtonFace')
-        # self.l1.place(x=300,y=200)
-        # self.e1.bind('<Down>', self.my_down) # down arrow key is pressed
-        # self.l1.bind('<Right>', self.my_upd) # right arrow key is pressed
-        # self.l1.bind('<Return>', self.my_upd)# return key is pressed 
-        # self.e1_str.trace('w',self.get_data)
-
-    # def my_upd(self,my_widget): # On selection of option 
-    #         my_w = my_widget.widget
-    #         index = int(my_w.curselection()[0]) # position of selection
-    #         value = my_w.get(index) # selected value 
-    #         self.e1_str.set(value) # set value for string variable of Entry 
-    #         self.l1.delete(0,tk.END)     # Delete all elements of Listbox
-    # def my_down(self,my_widget): # down arrow is clicked 
-    #     self.l1.focus()  # move focus to Listbox
-    #     self.l1.selection_set(0) # select the first option 
-    # def get_data(self,*args): # populate the Listbox with matching options 
-    #     search_str=self.e1.get() # user entered string 
-    #     self.l1.delete(0,tk.END)     # Delete all elements of Listbox
-    #     list_len=0
-    #     for i in range(len(self.my_list)):
-    #         if(re.match(search_str,self.my_list[i],re.IGNORECASE)):
-    #             self.l1.insert(tk.END,self.my_list[i])    #add matching options to Listbox
-    #             list_len+=1
-    #     self.l1.config(height=list_len)
+        self.balance = bef.getbalance(f'{self.username}')
         self.main.mainloop()
+
     def back_to_main(self,op):
         self.root.withdraw()
-        main = MainWindow(self.username,op)
-        
+        main = MainWindow(self.login_win,self.username,op)
+    
+    # def OnDoubleClick(self,event):
+    #     pass
         
 
     def exit_(self):
             self.root.destroy()
             exit()
+    def log_out(self):
+        self.root.withdraw()
+        self.login_win.deiconify()
+        self.login_win.state("zoomed")
     def switch(self):
         global btnState
         if btnState is True:
@@ -728,8 +728,8 @@ class CurrencyDetails:
             # turing button ON:
             btnState = True
     
-        def selling(self):
-            amt =  self.qentry.get()
+    def selling(self):
+        amt =  self.qentry.get()
         if amt == "":
             self.mes7 = tk.messagebox.showinfo("ERROR MESSAGE","ENTER SOME AMOUNT")
         else:
@@ -861,9 +861,10 @@ class Profile:
         self.wlabel3 = CTk.CTkLabel(self.Pframe0,text="FUND YOUR WALLET ",font=('Courier',30))
         self.wlabel3.place(x=20,y=30)
         self.balance = bef.getbalance(f'{self.username}')
+        self.balance = (self.balance*10000000)//1
         self.wlabel1 = CTk.CTkLabel(self.Pframe0,text="BALANCE AVAILABLE",font=('Courier',27))
         self.wlabel1.place(x=40,y=100)
-        self.wlabel2 = CTk.CTkLabel(self.Pframe0,text=f'{self.balance} USD',font=('Courier',20))
+        self.wlabel2 = CTk.CTkLabel(self.Pframe0,text=f'{self.balance/10000000} USD',font=('Courier',20))
         self.wlabel2.place(x=60,y=160)
 
         self.amt = tk.StringVar()
