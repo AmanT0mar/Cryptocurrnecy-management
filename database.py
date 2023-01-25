@@ -65,6 +65,7 @@ mycursor.execute("""CREATE TABLE IF NOT EXISTS COINS
                 (CNAME VARCHAR(25) NOT NULL,
                 CID VARCHAR(25) NOT NULL,
                 CSYMBOL VARCHAR(25) NOT NULL,
+                CIMAGE VARCHAR(10),
                 CONSTRAINT PK_I PRIMARY KEY(CID))""")
 mycursor.execute("""CREATE TABLE IF NOT EXISTS BALANCE
                  (USERNAME VARCHAR(30) NOT NULL,
