@@ -97,7 +97,7 @@ def buying(username,curname,quantity):
     d = mycursor.fetchall()
     if d == []:
         sql1 = f"INSERT INTO BOUGHT VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{tp},'{time_cur}')"
-        sql2 = f"INSERT INTO HOLDING VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{tp},{Decimal(a['priceUsd'])},NULL)"
+        sql2 = f"INSERT INTO HOLDING VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{tp},{Decimal(a['priceUsd'])},0)"
         mycursor.execute(sql1)
         mycursor.execute(sql2)
     else:
@@ -107,7 +107,7 @@ def buying(username,curname,quantity):
         old_pc = d[0][0]
         new_pc = ((old_pc*old_q)+(tp))/(old_q+amt)
         sql1 = f"INSERT INTO BOUGHT VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{tp},'{time_cur}')"
-        sql2 = f"UPDATE HOLDING SET QUANTITY = {old_q+amt} ,INVESTED = {tp+(old_pc*old_q)} ,PER_COIN = {new_pc} WHERE CURNAME = '{curname}'"
+        sql2 = f"UPDATE HOLDING SET QUANTITY = {old_q+amt} ,INVESTED = {tp+(old_pc*old_q)} ,PER_COIN = {new_pc} WHERE USERNAME = '{username}' AND CURNAME = '{curname}'"
         mycursor.execute(sql1)
         mycursor.execute(sql2)
     
@@ -141,7 +141,7 @@ def selling(username,curname,quantity):
 
     else:
         inv = pc_ * new_q
-        sql1 = f"UPDATE HOLDING SET QUANTITY = {new_q}, INVESTED = {inv}"
+        sql1 = f"UPDATE HOLDING SET QUANTITY = {new_q}, INVESTED = {inv} WHERE USERNAME = '{username}' AND CURNAME = '{curname}'"
         sql2 = f"INSERT INTO SELL_OUT VALUES('{username}','{a['symbol']}','{a['name']}',{Decimal(a['priceUsd'])},{amt},{total_r},'{time_cur}')"
         mycursor.execute(sql1)
         mycursor.execute(sql2)
@@ -233,7 +233,7 @@ def porl(username):
         tot_re = tot_re + i[0]
     return tot_re
 
-#From Wishlist
+#From Watchlist
 def fromwatchlist(username,curname):
     mycursor.execute(f"SELECT * FROM WATCHLIST WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
     data = mycursor.fetchall()
@@ -243,11 +243,12 @@ def fromwatchlist(username,curname):
 def get_cur_id(curname):
     mycursor.execute(f"SELECT CID FROM COINS WHERE CNAME='{curname}'")
     return mycursor.fetchall()[0][0]
-    
-#Remove from wishlist
+
+#Remove from Watchlist
 def rmfromwatchlist(username,curname):
     mycursor.execute(f"DELETE FROM WATCHLIST WHERE USERNAME = '{username}' AND CURNAME = '{curname}'")
     mydb.commit()
+
 #getting coin details
 def coind(curname):
     mycursor.execute(f"SELECT * FROM COINS WHERE CID = '{curname}'")
