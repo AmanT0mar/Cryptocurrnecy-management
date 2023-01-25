@@ -8,7 +8,7 @@ import hashlib
 import time 
 from decimal import Decimal
 
-mydb = mysql.connector.connect(host = "localhost", user="Aman", database = "myproj")
+mydb = mysql.connector.connect(host = "localhost", user="Aman", database = "MYDB")
 mycursor = mydb.cursor()
 
 #FOR SIGNUP
