@@ -1,1 +1,0 @@
-# Contains image of CryptoCurrency
