@@ -14,7 +14,7 @@ Using Python, we made a stand-alone application to display the Cryptocurrency de
 
 ### *Backend*
 
-Using Python, we connected to MySQL database for storing the User's details and real time data of Cryptocurrency.
+Using Python, we connected to MySQL database for storing the User's details and real time data of Cryptocurrency using CoinCap API.
 Allowing users to perform certain operation on any Cryptocurrency such as buying and selling(**These operations doesn't occur in real world**).
 
 ### *Database*
