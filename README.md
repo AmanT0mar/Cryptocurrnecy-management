@@ -1,6 +1,7 @@
 # 5th Semester Mini Project
  
 > Topic: Cryptocurrnecy management 
+> 
 > Team: [Aman Tomar](https://github.com/AmanT0mar), [Theja B.H.](https://github.com/thejabh)
 
 ## *Project Description*
