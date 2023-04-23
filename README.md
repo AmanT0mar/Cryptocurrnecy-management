@@ -6,7 +6,7 @@
 
 ## *Project Description*
 
-
+This project keeps track of user's interest cryptocurrency using MySQL, and retrieves real time data using CoinCap API. The cryptocurrency's historic data is represented by plotting graph using python.
 
 ### *Frontend*
 
