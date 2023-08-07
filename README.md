@@ -19,3 +19,5 @@ Allowing users to perform certain operation on any Cryptocurrency such as buying
 
 Contains database creation and table creations command.
 
+### *Screenshots*
+
