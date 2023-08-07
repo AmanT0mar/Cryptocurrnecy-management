@@ -21,3 +21,6 @@ Contains database creation and table creations command.
 
 ### *Screenshots*
 
+![3](https://github.com/AmanT0mar/Cryptocurrnecy-management/assets/75624000/28bbca46-b0e8-4e0e-a891-e8a61d271a4b)
+![1](https://github.com/AmanT0mar/Cryptocurrnecy-management/assets/75624000/ac739100-2ab7-4fe1-a9b3-eeb32644a795)
+
